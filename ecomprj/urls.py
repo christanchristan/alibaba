@@ -22,25 +22,13 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("index/", include("core.urls")),
-
-
-    
+    path("", include("core.urls")),
     path("user/", include("userauths.urls")),
     path("useradmin/", include("useradmin.urls")),
-     
-      path('' ,  include('home.urls')),
 
-
-
-    path('api/' , include('home.urls_api')),
-    path('froala_editor/',include('froala_editor.urls')),
-    path("ckeditor/", include("ckeditor_uploader.urls"))
+    # path("ckeditor/", include("ckeditor_uploader.urls")),
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
 ]
-
-
-
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -5,42 +5,86 @@
 
     <main class="main">
         <div class="container mb-30">
-            <div class="row flex-row-reverse">
-                <div class="col-lg-4-5">
+            
                     <section class="home-slider position-relative mb-30">
                         <div class="home-slide-cover mt-30">
                             <div class="hero-slider-1 style-4 dot-style-1 dot-style-1-position-1">
-                                
+                                <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/banner/banner-145.png' %})">
 
 
 
-                                <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/slider/q2.png' %})">
                                     <div class="slider-content">
-
-
-                                          <h1 class="display-2 mb-40">
-                                            አፍር ሶከር ኢትዮጵያ <br />ምርጫቹ ስላደረርጋቹን እናመሰግናለን
+                                        <h1 class="display-2 mb-40">
+                                            Lwam fashion Design<br />
                                         </h1>
-                                        <p class="mb-65"> always works to satisfy you</p>
-                                        <form class="form-subcriber d-flex">
                                       
                                        
-                                       
-                                            <input type="email" placeholder="Your emaill address" />
-                                            <button class="btn" type="submit">Subscribe</button>
+                                    </div>
+                                </div>
+
+   <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/banner/banner-145.png' %})">
+
+
+                                     
+                                    <div class="slider-content">
+                                        <h1 class="display-2 mb-40">
+                                            Lwam fashion Design<br /> 
+                                        </h1>
+                                     
+                                        <form class="form-subcriber d-flex">
+                                          
+                                          
                                         </form>
                                     </div>
                                 </div>
-                                <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/slider/q2.png' %})">
+
+ 
+
+ <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/banner/banner-145.png' %})">
+
+
+                                     
                                     <div class="slider-content">
                                         <h1 class="display-2 mb-40">
-                                            አፍር ሶከር ኢትዮጵያ <br />የህገር ዉስጥ ተጫዋቾችን ለአለም እናስተዋውቃለን
+                                            Lwam fashion Design<br />
                                         </h1>
-                                        <p class="mb-65"> always works to satisfy you</p>
-                                        <form class="form-subcriber d-flex">
-                                            <input type="email" placeholder="Your emaill address" />
-                                            <button class="btn" type="submit">Subscribe</button>
-                                        </form>
+                                      
+                                        
+                                    </div>
+                                </div>
+                                 
+ <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/banner/banner-145.png' %})">
+
+                                     
+                                  
+                                </div>
+
+                                 <div class="single-hero-slider single-animation-wrap">
+                         
+ <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/banner/banner-145.png' %})">
+ </div>
+
+ <div class="single-hero-slider single-animation-wrap">
+                               <a href="#"><img src="{% static 'assets/imgs/banner/banner-14.png' %}" alt="E-commerce" /></a>
+ </div >
+  <div class="single-hero-slider single-animation-wrap">
+       <div class="slider-content">
+                                        <h1 class="display-2 mb-40">
+                                            Lwam fashion Design<br />
+                                        </h1>
+                                       
+                            
+ <div class="single-hero-slider single-animation-wrap" style="background-image: url({% static 'assets/imgs/banner/banner-145.png' %})">
+
+                             
+
+ <div>
+
+                              <img src="{% static 'assets/imgs/banner/banner-145.png" alt="logo" />
+
+ </div>
+
+                                    
                                     </div>
                                 </div>
                             </div>
@@ -50,14 +94,42 @@
                     <!--End hero-->
                     <section class="product-tabs section-padding position-relative">
                         <div class="section-title style-2">
-                           
-                            <ul class="nav nav-tabs links" id="myTab" role="tablist">
-                                 <h3>Ethiopian Well known  Clubs </h3>
-                              
+                            <h3>Popular Products</h3>
+                            <ul class="nav nav-tabs links" id="myTab" role="tablist">  <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="{% url 'core:wishlist' %}">
+                                        <img class="svgInject" alt="E-commerce" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
+                                        {% if request.user.is_authenticated %}
+                                        <span class="pro-count blue">{{ wishlist.count }}</span>
+                                        {% else %}
+                                        <span class="pro-count blue">0</span>
+                                        {% endif %}
+                                    </a>
+                                    <a href="{% url 'core:wishlist' %}"><span class="lable">Wishlist</span></a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="{% url 'core:cart' %}">
+                                        <img alt="E-commerce" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
+                                        <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
+                                    </a>
+                                    <a href="{% url 'core:cart' %}"><span class="lable">Cart</span></a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+
+                                        <div class="shopping-cart-footer">
+
+                                            <div class="shopping-cart-button">
+                                                <a href="{% url 'core:cart' %}" class="outline">View cart</a>
+                                          
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
                             </ul>
+
                         </div>
                         <!--End nav-tabs-->
-             <!--End nav-tabs-->
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
                                 <div class="row product-grid-4">
@@ -65,8 +137,10 @@
                                     {% for p in products %}
                                     <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
                                         <div class="product-cart-wrap mb-30">
+
                                             <div class="product-img-action-wrap">
                                                 <div class="product-img product-img-zoom">
+
                                                     <a href="{% url 'core:product-detail' p.pid %}">
                                                         <img class="default-img" src="{{ p.image.url }}" alt="" style="height: 280px; width: 280px; object-fit: cover;"   />
                                                         <img class="hover-img" src="{{ p.image.url }}" alt=""  style="height: 280px; width: 280px; object-fit: cover;"  />
@@ -78,7 +152,7 @@
                                                     <a href="{% url 'core:product-detail' p.pid %}" class="action-btn"><i class="fi-rs-eye"></i></a>
                                                 </div>
                                                 <div class="product-badges product-badges-position product-badges-mrg">
-                                                    <span class="hot">-{{p.get_precentage|floatformat:0}}%</span>
+                                                    <span class="hot">SALE</span>
                                                 </div>
                                             </div>
                                             <div class="product-content-wrap">
@@ -93,11 +167,13 @@
                                                     <i class="fas fa-star text-warning"></i>
                                                     <span class="font-small ml-5 text-muted"> ({{ p.reviews.all.count }})</span>
                                                 </div>
-                                               
+                                                <div>
+                                                    <span class="font-small text-muted">By <a href="">Lwam Takele </a></span>
+                                                </div>
                                                 <div class="product-card-bottom">
                                                     <div class="product-price">
-                                                        <span></span> <span class="current-product-price-{{ p.id }}"></span>
-                                                        <span class="old-price"></span>
+                                                        <span>$</span> <span class="current-product-price-{{ p.id }}">{{p.price}}</span>
+                                                        <span class="old-price">${{p.old_price}}</span>
                                                     </div>
                                                     <div class="add-cart">
                                                         <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.id }}">
@@ -107,7 +183,7 @@
                                                         <input type="hidden" class="product-title-{{ p.id }}" value="{{ p.title }}">
 
                                                         <div class="d-flex">
-                                                            <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>like</button>
+                                                            <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>Add</button>
                                                             <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>
                                                         </div>
                                                     </div>
@@ -120,8 +196,25 @@
                                 <!--End product-grid-4-->
                             </div>
                             <!--En tab one-->
+                                               
+                                 
                            
-        
+        <section class="popular-categories section-padding">
+            <div class="container">
+              
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--End category slider-->
+      
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!--End 4 columns-->
     </main>
     

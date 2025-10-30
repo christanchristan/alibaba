@@ -8,12 +8,15 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=100)
     bio = models.CharField(max_length=100)
-
+    phone = models.CharField(max_length=200)
+    state = models.CharField(max_length=200, null=True, blank=True)
+    country = models.CharField(max_length=200, null=True, blank=True)
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.username
+       return f"{self.email} - {self.username}"
 
 
 class Profile(models.Model):
@@ -33,6 +36,8 @@ class ContactUs(models.Model):
     email = models.CharField(max_length=200)
     phone = models.CharField(max_length=200) # +234 (456) - 789
     subject = models.CharField(max_length=200) # +234 (456) - 789
+    state =  models.CharField(max_length=200, null=True, blank=True)
+    zipcode =models.CharField(max_length=200, null=True, blank=True)
     message = models.TextField()
 
     class Meta:

@@ -13,7 +13,7 @@
             <div class="container">
                 <div class="breadcrumb">
                     <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                    <span></span> <a href="shop-grid-right.html">Ethiopian Sport Heros</a> <span></span> 
+                    <span></span> <a href="shop-grid-right.html">Shop</a> <span></span> Cart
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                                 <div class="row mb-50 mt-30">
                                     <div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
                                         <div class="detail-gallery">
-                                            <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                            
                                             <!-- MAIN SLIDES -->
                                             <div class="product-image-slider">
                                                 <figure class="border-radius-10">
@@ -50,22 +50,24 @@
                                     </div>
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="detail-info pr-30 pl-30">
-                                            <span class="stock-status out-stock"> -{{p.get_precentage|floatformat:0}}% </span>
+                                            <span class="stock-status out-stock"div class="product-badges product-badges-position product-badges-mrg">
+                                                    <span class="hot">SALE</span>
+                                                </div> </span>
                                             <h2 class="title-detail">{{p.title}}</h2>
                                             <div class="product-detail-rating">
                                                 <div class="product-rate-cover text-end">
                                                     <div class="product-rate d-inline-block">
                                                         <div class="product-rating" style="width: 90%"></div>
                                                     </div>
-                                                    <span class="font-small ml-5 text-muted"> (980 reviews)</span>
+                                                    <span class="font-small ml-5 text-muted"> (32 reviews)</span>
                                                 </div>
                                             </div>
                                             <div class="clearfix product-price-cover">
                                                 <div class="product-price primary-color float-left">
-                                                    <span class="current-price text-brand"></span><span class="current-price text-brand current-price current-product-price-{{ p.id }}" id="current-product-price"></span>
+                                                    <span class="current-price text-brand">$</span><span class="current-price text-brand current-price current-product-price-{{ p.id }}" id="current-product-price">{{p.price}}</span>
                                                     <span>
-                                                        <span class="save-price font-md color3 ml-15">
-                                                    <span class="old-price font-md ml-15"></span>
+                                                        <span class="save-price font-md color3 ml-15">-{{p.get_precentage|floatformat:0}}% Off</span>
+                                                    <span class="old-price font-md ml-15">${{p.old_price}}</span>
                                                     </span>
                                                 </div>
                                             </div>
@@ -88,8 +90,8 @@
                                                     <span class="qty-val">1</span>
                                                     <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                                 </div> -->
-                                                   
-                                            
+                                                    <input type="number" value="1" name="" id="product-quantity" class="w-25 mb-10 product-quantity-{{ p.id }}">
+                                                    <br>
                                                 <div class="product-extra-link2">
                                                     <!-- <input type="hidden" value="{{ p.id }}" class="product-id" name="" id="">
                                                     <input type="hidden" value="{{ p.title }}" class="product-title" name="" id=""> -->
@@ -101,38 +103,37 @@
                                                         <input type="hidden" class="product-title-{{ p.id }}" value="{{ p.title }}">
 
                                                     
-                                                    <button type="submit" class="button button-add-to-cart add-to-cart-btn" data-index="{{ p.id }}" id="add-to-cart-btn"><i class="fi-rs-shopping-cart"></i>like</button>
+                                                    <button type="submit" class="button button-add-to-cart add-to-cart-btn" data-index="{{ p.id }}" id="add-to-cart-btn"><i class="fi-rs-shopping-cart"></i>Add to cart</button>
                                                     <a aria-label="Add To Wishlist" class="action-btn hover-up add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart"></i></a>
-                                                    <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                   
                                                 </div>
                                             </div>
                                             <div class="font-xs">
                                                 <ul class="mr-50 float-start">
-                                                    <li class="mb-5">Currently He is Playing in: <span class="text-brand">{{p.type}}Club</span></li><br>
-                                                    <li class="mb-5">date He started Playing:<span class="text-brand"> {{p.mfd|date:"d M, Y"}}</span></li><br>
-                                                    <li>he has Scored : <span class="text-brand">{{ p.life }} Goal</span></li><br>
+                                                    <li class="mb-5">Type: <span class="text-brand">{{p.type}}</span></li>
+                                                    <li class="mb-5">MFG:<span class="text-brand"> {{p.mfd|date:"d M, Y"}}</span></li>
+                                                    <li>LIFE: <span class="text-brand">{{ p.life }}</span></li>
                                                 </ul>
                                                 <ul class="float-start">
-                                                    
-                                                    <li>He Wears No<span class="in-stock text-brand ml-5">{{p.stock_count}} </span></li>
+                                                    <li class="mb-5">SKU: <a href="#">{{p.sku}}</a></li>
+                                                    {% if p.tags %}
+                                                   
+                                                    {% endif %}
+                                                    <li>Stock:<span class="in-stock text-brand ml-5">{{p.stock_count}} Items In Stock</span></li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <!-- Detail Info -->
                                     </div>
                                 </div>
-
-
-
-
-
                                 <div class="product-info">
                                     <div class="tab-style3">
                                         <ul class="nav nav-tabs text-uppercase">
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="Description-tab" data-bs-toggle="tab" href="#Description">Description</a>
                                             </li>
-                                            
+                                          
+                                           
                                         </ul>
                                         <div class="tab-content shop_info_tab entry-main-content">
                                             <div class="tab-pane fade show active" id="Description">
@@ -143,94 +144,7 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="Additional-info">
-                                                <table class="font-md">
-                                                    <tbody>
-                                                        <tr class="stand-up">
-                                                            <th>Age (as of 2022): </th>
-                                                            <td>
-                                                                <p>35 Years</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="folded-wo-wheels">
-                                                            <th>Date of Birth: </th>
-                                                            <td>
-                                                                <p>------</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="folded-w-wheels">
-                                                            <th>height</th>
-                                                            <td>
-                                                                <p>----</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="door-pass-through">
-                                                            <th>Weght</th>
-                                                            <td>
-                                                                <p>----</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="frame">
-                                                            <th>position player</th>
-                                                            <td>
-                                                                <p>----</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="weight-wo-wheels">
-                                                            <th>Weight (w/o wheels)</th>
-                                                            <td>
-                                                                <p>20 LBS</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="weight-capacity">
-                                                            <th>Weight Capacity</th>
-                                                            <td>
-                                                                <p>------</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="width">
-                                                            <th>Width</th>
-                                                            <td>
-                                                                <p>-----</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="handle-height-ground-to-handle">
-                                                            <th>Handle height (ground to handle)</th>
-                                                            <td>
-                                                                <p>37-45″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="wheels">
-                                                            <th>Wheels</th>
-                                                            <td>
-                                                                <p>12″ air / wide track slick tread</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="seat-back-height">
-                                                            <th></th>
-                                                            <td>
-                                                                <p>21.5″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="head-room-inside-canopy">
-                                                            <th>player</th>
-                                                            <td>
-                                                                <p>Mid Fild Player</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="pa_color">
-                                                            <th>Healthy</th>
-                                                            <td>
-                                                                <p>Normal</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="pa_size">
-                                                            <th>Size</th>
-                                                            <td>
-                                                                <p>M, S</p>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                              
                                             </div>
                                             <div class="tab-pane fade" id="Vendor-info">
                                                 <div class="vendor-logo d-flex mb-30">
@@ -243,7 +157,7 @@
                                                             <div class="product-rate d-inline-block">
                                                                 <div class="product-rating" style="width: 90%"></div>
                                                             </div>
-                                                            <span class="font-small ml-5 text-muted"> (500 reviews)</span>
+                                                            <span class="font-small ml-5 text-muted"> (32 reviews)</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -393,7 +307,7 @@
                                 <div class="row mt-60">
                                     {% if products %}
                                     <div class="col-12">
-                                        <h2 class="section-title style-1 mb-30">Related Players/Clubs/Coachs</h2>
+                                        <h2 class="section-title style-1 mb-30">Related products</h2>
                                     </div>
                                     {% endif %}
                                     <div class="col-12">
@@ -432,13 +346,13 @@
                                                             {% if p.vendor %}
                                                             <span class="font-small text-muted">By <a href="{% url 'core:vendor-detail' p.vendor.vid %}">{{p.vendor.title}}</a></span>
                                                             {% else %}  
-                                                            <span class="font-small text-muted">By <a href="">Destiny Franks</a></span>
+                                                            <span class="font-small text-muted">By <a href="">Lwam Takele </a></span>
                                                             {% endif %}
                                                         </div>
                                                         <div class="product-card-bottom">
                                                             <div class="product-price">
-                                                                <span></span> <span class="current-product-price-{{ p.id }}"></span>
-                                                                <span class="old-price"></span>
+                                                                <span>$</span> <span class="current-product-price-{{ p.id }}">{{p.price}}</span>
+                                                                <span class="old-price">${{p.old_price}}</span>
                                                             </div>
                                                             <div class="add-cart">
                                                                 <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.id }}">
@@ -447,7 +361,7 @@
                                                                 <input type="hidden" class="product-id-{{ p.id }}" value="{{ p.id }}">
                                                                 <input type="hidden" class="product-title-{{ p.id }}" value="{{ p.title }}">
                                                                 <div class="d-flex">
-                                                                    <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>like</button>
+                                                                    <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>Add</button>
                                                                     <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>
                                                                 </div>
                                                                 <!-- <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>Add</button> -->
@@ -462,6 +376,75 @@
                                 </div>
                             </div>
                         </div>
-                        
+                        <div class="col-xl-3 primary-sidebar sticky-sidebar mt-30">
+                            <div class="sidebar-widget widget-delivery mb-30 bg-grey-9 box-shadow-none">
+                                <h5 class="section-title style-3 mb-20">Send Us Message</h5>
+                                <ul>
+                                    <li>
+                                        <i class="fi fi-rs-marker mr-10 text-brand"></i>
+                                        <span>
+                                            {{ address.address }}    <a href="http://127.0.0.1:8000/contact">Contact us</a><br />
+                                             <br />
+                                             
+                                        </span>
+                                     
+                                    </li>  
+                                    <li class="hr"><span></span></li>
+                                </ul>
+                                <h5 class="section-title style-3 mb-20">Return & Warranty</h5>
+                                <ul>
+                                    <li>
+                                        <i class="fi fi-rs-shield-check mr-10 text-brand"></i>
+                                        <span> {{p.vendor.authentic_rating}}% Authentic </span>
+                                    </li>
+                                    <li>
+                                        <i class="fi fi-rs-time-forward-ten mr-10 text-brand"></i>
+                                        <span> {{p.vendor.days_return}} Days Return  </span>
+                                    </li>
+                                    <li>
+                                        <i class="fi fi-rs-diploma mr-10 text-brand"></i>
+                                        <span> {{p.vendor.warranty_period}} Months Warranty </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="sidebar-widget widget-vendor mb-30 bg-grey-9 box-shadow-none">
+                                <h5 class="section-title style-3 mb-20">Vendor Address</h5>
+                                <div class="vendor-logo d-flex mb-30">
+                                    <img src="{{p.vendor.image.url}}" alt="" />
+                                    <div class="vendor-name ml-15">
+                                        <h6>
+                                            <a href="vendor-details-2.html">{{p.vendor.title}}</a>
+                                        </h6>
+                                        <div class="product-rate-cover text-end">
+                                            <div class="product-rate d-inline-block">
+                                                <div class="product-rating" style="width: 90%"></div>
+                                            </div>
+                                            <span class="font-small ml-5 text-muted"> (39 reviews)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="contact-infor">
+                                    <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Address: </strong> <span>Addis ababa bole 08 district</span></li>
+                                    <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Contact Seller:</strong><span>+251935277364</span></li>
+                                    <li class="hr"><span></span></li>
+                                </ul>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-brand font-xs">Shiping</p>
+                                        <h4 class="mb-0">free shipping.</h4>
+                                    </div>
+                                   
+                                </div>
+                                <ul>
+                                    <li class="hr"><span></span></li>
+                                </ul>
+                              
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 {% endblock content %}

@@ -8,10 +8,15 @@ class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder":"Email"}))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder":"Password"}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder":"Confirm Password"}))
+    bio= forms.CharField(widget=forms.TextInput(attrs={"placeholder":"Adress"}))
+    phone= forms.CharField(widget=forms.TextInput(attrs={"placeholder":"phone"}))
+    country=forms.CharField(widget=forms.TextInput(attrs={"placeholder":"country"}))
+    state=forms.CharField(widget=forms.TextInput(attrs={"placeholder":"state"})) 
+   
 
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email','bio','phone','country','state']
 
 
 

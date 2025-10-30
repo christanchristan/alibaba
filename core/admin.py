@@ -17,8 +17,8 @@ class VendorAdmin(admin.ModelAdmin):
 
 
 class CartOrderAdmin(admin.ModelAdmin):
-    list_editable = ['paid_status', 'product_status', 'sku']
-    list_display = ['user',  'price', 'paid_status', 'order_date','product_status', 'sku']
+    list_editable = ['paid_status', 'email', 'product_status', 'sku']
+    list_display = ['user', 'email', 'price', 'paid_status', 'order_date','product_status', 'sku']
 
 
 class CartOrderProductsAdmin(admin.ModelAdmin):

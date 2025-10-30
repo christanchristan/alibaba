@@ -2,10 +2,10 @@ from django.contrib import admin
 from userauths.models import User, ContactUs, Profile
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'bio']
+    list_display = ['username', 'email', 'bio', 'phone']
 
 class ContactUsAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'email', 'subject']
+    list_display = ['full_name', 'email','state','zipcode', 'subject']
 
 
 # class ProfileAdmin(admin.ModelAdmin):
