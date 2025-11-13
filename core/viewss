@@ -9,7 +9,7 @@ from userauths.models import ContactUs, Profile
 from core.forms import ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
-
+import json
 from django.urls import reverse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -446,6 +446,25 @@ def checkout(request, oid):
 
     }
     return render(request, "core/checkout.html", context)
+# views.py
+
+@csrf_exempt  # Only if you didn't send CSRF token; better to use CSRF token
+def test_mobile_money(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        phone = data.get("phone")
+        otp = data.get("otp")
+        order_id = data.get("order_id")
+        
+        # Example logic: check if phone & otp are correct
+        if phone == "0900123456" and otp == "12345":
+            return JsonResponse({"status": "success", "transaction_id": "TX123456"})
+        else:
+            return JsonResponse({"status": "failed", "message": "Invalid OTP"})
+
+    return JsonResponse({"status": "failed", "message": "Invalid request"})
+
+
 
 
 @login_required
