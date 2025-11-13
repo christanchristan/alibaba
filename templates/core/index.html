@@ -108,23 +108,6 @@
                                     </a>
                                     <a href="{% url 'core:wishlist' %}"><span class="lable">Wishlist</span></a>
                                 </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="{% url 'core:cart' %}">
-                                        <img alt="E-commerce" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                        <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
-                                    </a>
-                                    <a href="{% url 'core:cart' %}"><span class="lable">Cart</span></a>
-                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
-
-                                        <div class="shopping-cart-footer">
-
-                                            <div class="shopping-cart-button">
-                                                <a href="{% url 'core:cart' %}" class="outline">View cart</a>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                             </ul>
 
@@ -184,7 +167,28 @@
 
                                                         <div class="d-flex">
                                                             <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>Add</button>
+                                                          
+
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="{% url 'core:cart' %}">
+                                        <img alt="E-commerce" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
+                                      
+                                    <a href="{% url 'core:cart' %}"><span class="lable">View Cart</span></a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+
+                                        <div class="shopping-cart-footer">
+
+                                            <div class="shopping-cart-button">
+                                                <a href="{% url 'core:cart' %}" class="outline">View cart</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                                            
                                                             <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>
+
                                                         </div>
                                                     </div>
                                                 </div>

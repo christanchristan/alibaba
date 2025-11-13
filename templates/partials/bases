@@ -957,7 +957,7 @@
                     <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-pinterest-white.svg' %}" alt="" /></a>
                     <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-youtube-white.svg' %}" alt="" /></a>
                 </div>
-                <div class="site-copyright">Copyright 2023 - Present © afrosocherethiopia. All rights reserved. Powered by afrosocker ethiopia.</div>
+                <div class="site-copyright">Copyright 2025 - Present © lwamethiopia. All rights reserved. Powered by afrosocker ethiopia.</div>
             </div>
         </div>
     </div>

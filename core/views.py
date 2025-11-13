@@ -2,6 +2,7 @@
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from requests import session
+from django.conf import settings
 import stripe
 from taggit.models import Tag
 from core.models import Coupon, Product, Category, Vendor, CartOrder, CartOrderProducts, ProductImages, ProductReview, wishlist_model, Address
@@ -9,12 +10,18 @@ from userauths.models import ContactUs, Profile,User
 from core.forms import ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
-
+import requests
+import uuid
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-from django.conf import settings
+from django.conf import Settings
 from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json  # <-- Make sure this is included
 
 import calendar
 from django.db.models import Count, Avg
@@ -279,6 +286,54 @@ def delete_item_from_cart(request):
     return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
 
 
+
+
+
+
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def delete_cart_item(request, product_id):
+    product_id = str(product_id)  # session key is string
+    if 'cart_data_obj' in request.session:
+        cart_data = request.session['cart_data_obj']
+        if product_id in cart_data:
+            del cart_data[product_id]
+            request.session['cart_data_obj'] = cart_data
+
+    cart_total_amount = sum(int(item['qty']) * float(item['price']) for item in request.session.get('cart_data_obj', {}).values())
+
+    context = render_to_string("core/async/cart-list.html", {
+        "cart_data": request.session.get('cart_data_obj', {}),
+        'totalcartitems': len(request.session.get('cart_data_obj', {})),
+        'cart_total_amount': cart_total_amount
+    })
+    return JsonResponse({"data": context, "totalcartitems": len(request.session.get('cart_data_obj', {}))})
+
+
+@csrf_exempt
+def update_cart_item(request, product_id):
+    product_id = str(product_id)
+    qty = request.POST.get('qty') or request.GET.get('qty')  # get qty from POST/GET
+
+    if 'cart_data_obj' in request.session and product_id in request.session['cart_data_obj']:
+        cart_data = request.session['cart_data_obj']
+        cart_data[product_id]['qty'] = int(qty)
+        request.session['cart_data_obj'] = cart_data
+
+    cart_total_amount = sum(int(item['qty']) * float(item['price']) for item in request.session.get('cart_data_obj', {}).values())
+
+    context = render_to_string("core/async/cart-list.html", {
+        "cart_data": request.session.get('cart_data_obj', {}),
+        'totalcartitems': len(request.session.get('cart_data_obj', {})),
+        'cart_total_amount': cart_total_amount
+    })
+    return JsonResponse({"data": context, "totalcartitems": len(request.session.get('cart_data_obj', {}))})
+
+
+
 def update_cart(request):
     product_id = str(request.GET['id'])
     product_qty = request.GET['qty']
@@ -297,67 +352,114 @@ def update_cart(request):
     context = render_to_string("core/async/cart-list.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount})
     return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
 
-
-
 @login_required
-def checkout_view(request):
-    cart_total_amount = 0
-    total_amount = 0
+def checkout_view(request, oid):
+    # Fetch order and its items
+    order = get_object_or_404(CartOrder, oid=oid, user=request.user)
+    order_items = CartOrderProducts.objects.filter(order=order)
+    # Test accounts (if you want to display test info)
+    test_user_amole = {"phone": "0912345678", "otp": "1234"}  # replace with your test data
+    test_user_awash = {"phone": "0945678901", "otp": "5678"}
+    test_card = {"provider": "Visa", "number": "4242 4242 4242 4242", "cvv": "123", "expiry": "12/34"}
 
-    # Checking if cart_data_obj session exists
-    if 'cart_data_obj' in request.session:
+    # PayPal button
+    host = request.get_host()
+    paypal_dict = {
+        'business': settings.PAYPAL_RECEIVER_EMAIL,
+        'amount': order.price,
+        'item_name': f"Order-Item-No-{order.oid}",
+        'invoice': f"INVOICE_NO-{order.oid}",
+        'currency_code': "USD",
+        'notify_url': f"http://{host}{reverse('core:paypal-ipn')}",
+        'cancel_url': f"http://{host}{reverse('core:payment-failed')}",
+    }
+    paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
 
-        # Getting total amount for Paypal Amount
-        for p_id, item in request.session['cart_data_obj'].items():
-            total_amount += int(item['qty']) * float(item['price'])
+    context = {
+        "order": order,
+        "order_items": order_items,
+        "stripe_publishable_key": settings.STRIPE_PUBLIC_KEY,
+        "paypal_payment_button": paypal_payment_button,
+        "test_user_amole": test_user_amole,
+        "test_user_awash": test_user_awash,
+        "test_card": test_card,
+    }
 
-        # Create ORder Object
-        order = CartOrder.objects.create(
-            user=request.user,
-            price=total_amount
-        )
+    return render(request, "core/checkout.html", context)
 
-        # Getting total amount for The Cart
-        for p_id, item in request.session['cart_data_obj'].items():
-            cart_total_amount += int(item['qty']) * float(item['price'])
 
-            cart_order_products = CartOrderProducts.objects.create(
-                order=order,
-                invoice_no="INVOICE_NO-" + str(order.id), # INVOICE_NO-5,
-                item=item['title'],
-                image=item['image'],
-                qty=item['qty'],
-                price=item['price'],
-                total=float(item['qty']) * float(item['price'])
+
+@csrf_exempt
+def test_chapa_payment(request):
+    if request.method == "POST":
+        try:
+            print("Raw request body:", request.body)
+            data = json.loads(request.body)
+
+            amount = data.get("amount")
+            currency = data.get("currency", "ETB")
+            email = data.get("email", "test@example.com")
+            first_name = data.get("first_name", "Test")
+            last_name = data.get("last_name", "User")
+            phone_number = data.get("phone_number", "0912345678")
+
+            if not amount:
+                return JsonResponse({"status": "failed", "message": "Amount is required."})
+
+            # ✅ Generate unique transaction reference
+            tx_ref = f"chewatatest-{uuid.uuid4().hex[:8]}"
+
+            # ✅ Prepare payload
+            payload = {
+                "amount": amount,
+                "currency": currency,
+                "tx_ref": tx_ref,
+                "email": email,
+                "first_name": first_name,
+                "last_name": last_name,
+                "phone_number": phone_number,
+                "callback_url": "http://localhost:8000/chapa-callback/",
+                "return_url": "http://localhost:8000/chapa-return/",
+                "customization": {
+                    "title": "Payment for my favourite merchant",
+                    "description": "I love online payments"
+                }
+            }
+
+            # ✅ Correct Authorization header
+            headers = {
+    "Authorization": "Bearer CHASECK_TEST-PHIGIZhBowkvz0YDT9mYIsTw532JqFLB",
+    "Content-Type": "application/json",
+}
+
+
+            # ✅ Make request to Chapa API
+            response = requests.post(
+                "https://api.chapa.co/v1/transaction/initialize",
+                headers=headers,
+                json=payload
             )
 
-        host = request.get_host()
-        paypal_dict = {
-            'business': settings.PAYPAL_RECEIVER_EMAIL,
-            'amount': cart_total_amount,
-            'item_name': "Order-Item-No-" + str(order.id),
-            'invoice': "INVOICE_NO-" + str(order.id),
-            'currency_code': "USD",
-            'notify_url': 'http://{}{}'.format(host, reverse("core:paypal-ipn")),
-         
-            'cancel_url': 'http://{}{}'.format(host, reverse("core:payment-failed")),
-        }
+            result = response.json()
+            print("Chapa Response:", result)
 
-        paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
+            if result.get("status") == "success":
+                return JsonResponse({
+                    "status": "success",
+                    "payment_url": result["data"]["checkout_url"],
+                    "tx_ref": tx_ref
+                })
+            else:
+                return JsonResponse({
+                    "status": "failed",
+                    "message": result.get("message", "Unknown error")
+                })
 
-        # cart_total_amount = 0
-        # if 'cart_data_obj' in request.session:
-        #     for p_id, item in request.session['cart_data_obj'].items():
-        #         cart_total_amount += int(item['qty']) * float(item['price'])
+        except Exception as e:
+            print("Error initializing Chapa transaction:", e)
+            return JsonResponse({"status": "failed", "message": str(e)})
 
-        try:
-            active_address = Address.objects.get(user=request.user, status=True)
-        except:
-            messages.warning(request, "There are multiple addresses, only one should be activated.")
-            active_address = None
-
-        return render(request, "core/checkout.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount, 'paypal_payment_button':paypal_payment_button, "active_address":active_address})
-
+    return JsonResponse({"status": "failed", "message": "Invalid request method"})
 @login_required
 def save_checkout_info(request):
     cart_total_amount = 0
@@ -518,21 +620,83 @@ def checkout(request, oid):
     return render(request, "core/checkout.html", context)
 
 
+
+
+
+@csrf_exempt  # Allow POST without CSRF token (for testing)
+def test_mobile_money(request):
+    print("✅ test_mobile_money view called")  # Debug log in console
+
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            phone = data.get("phone")
+            otp = data.get("otp")
+            order_id = data.get("order_id")
+
+            print(f"📩 Received data: phone={phone}, otp={otp}, order_id={order_id}")
+
+            # Test payment verification
+            if phone == "0900123456" and otp == "12345":
+                print("✅ OTP matched, returning success.")
+                return JsonResponse({
+                    "status": "success",
+                    "transaction_id": "TX123456",
+                    "order_id": order_id
+                })
+            else:
+                print("❌ Invalid OTP or phone.")
+                return JsonResponse({
+                    "status": "failed",
+                    "message": "Invalid OTP or phone number"
+                })
+        except Exception as e:
+            print(f"🔥 Error parsing request: {e}")
+            return JsonResponse({"status": "failed", "message": str(e)})
+
+    print("⚠️ Invalid request method.")
+    return JsonResponse({"status": "failed", "message": "Invalid request"})
+
+
+
+
+
+CHAPA_SECRET_KEY = "CHAPUBK_TEST-ptWPjWpjl81OI19Hr82yg360dw8qnmfn"
+
+def pay_with_chapa(phone, amount):
+    url = "https://api.chapa.co/v1/transaction/initialize"
+    headers = {"Authorization": f"Bearer {CHAPA_SECRET_KEY}"}
+    data = {
+        "amount": amount,
+        "currency": "ETB",
+        "tx_ref": "TX12345", 
+        "phone_number": phone,
+        "callback_url": "http://localhost:8000/callback/"
+    }
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
+
+
 @login_required
 def payment_completed_view(request, oid):
-    order = CartOrder.objects.get(oid=oid)
+    # Get the order for the logged-in user
+    order = get_object_or_404(CartOrder, oid=oid, user=request.user)
     
-    if order.paid_status == False:
+    # Mark the order as paid if it isn't already
+    if not order.paid_status:
         order.paid_status = True
         order.save()
-        
+
+        # Clear the session cart after successful payment
+        if 'cart_data_obj' in request.session:
+            del request.session['cart_data_obj']
+
     context = {
         "order": order,
         "stripe_publishable_key": settings.STRIPE_PUBLIC_KEY,
-
     }
-    return render(request, 'core/payment-completed.html',  context)
 
+    return render(request, 'core/payment-completed.html', context)
 @login_required
 def payment_failed_view(request):
     return render(request, 'core/payment-failed.html')
