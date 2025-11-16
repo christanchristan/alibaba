@@ -58,30 +58,24 @@
         <div class="container">
             <div class="breadcrumb">
                 <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                <span></span> Shop <span></span> Filter
+                <spans></span> Shop <span></span> Filter
             </div>
         </div>
     </div>
 
     <div class="container mb-30 mt-30">
+
         <div class="row">
             <!-- Filters Column -->
             <div class="col-lg-3 filters-column">
                 <!-- Categories Filter -->
-                <div class="card mb-30">
-                    <h5 class="mb-20">By Categories</h5>
-                    <div class="categories-dropdown-wrap font-heading">
-                        <ul>
-                            {% for c in categories %}
-                                <li>
-                                    <input data-filter="category" class="form-check-input filter-checkbox" type="checkbox" name="checkbox" id="category-{{c.id}}" value="{{ c.id }}" />
-                                    &nbsp;&nbsp;
-                                    <a href="{% url 'core:category-product-list' c.cid %}">
-                                        <img src="{{c.image.url}}" alt="" />{{ c.title }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
+               <div class="card mb-30">
+                    <h5 class="mb-20">By categories</h5>
+                    <div class="d-flex flex-column">
+                       {% for c in categories %}
+                            <input class="form-check-input filter-checkbox mb-2" data-filter="category" type="checkbox" name="checkbox" id="vendor-{{c.id}}" value="{{ c.id }}" />
+                            <label class="form-check-label mb-2" for="category-{{c.id}}"><span>{{c.title}}</span></label>
+                        {% endfor %}
                     </div>
                 </div>
 

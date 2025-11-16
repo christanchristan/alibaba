@@ -29,7 +29,6 @@ ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'jazzmin', 
     'django.contrib.admin',
@@ -40,14 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django.contrib.humanize',
-
+    'rest_framework',
+    'drf_spectacular',
+    'drf_yasg',  # Swagger
 
     # Third Party
     'taggit',
     'ckeditor',
     'bootstrap_datepicker_plus',
     'bootstrap4',
-     'django_ckeditor_5',
+    'django_ckeditor_5',
 
     # PayPal Integration
     'paypal.standard.ipn',
@@ -56,9 +57,6 @@ INSTALLED_APPS = [
     'core',
     'userauths',
     'home',
-    
-
-
 ]
 
 MIDDLEWARE = [

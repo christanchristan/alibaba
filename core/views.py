@@ -5,6 +5,8 @@ from requests import session
 from django.conf import settings
 import stripe
 from taggit.models import Tag
+from django.db.models import Min, Max
+
 from core.models import Coupon, Product, Category, Vendor, CartOrder, CartOrderProducts, ProductImages, ProductReview, wishlist_model, Address
 from userauths.models import ContactUs, Profile,User
 from core.forms import ProductReviewForm
@@ -43,9 +45,22 @@ def product_list_view(request):
     products = Product.objects.filter(product_status="published").order_by("-id")
     tags = Tag.objects.all().order_by("-id")[:6]
 
+    # Add categories and vendors
+    categories = Category.objects.all()
+    vendors = Vendor.objects.all()
+
+    # Get min/max price for the slider
+    min_max_price = products.aggregate(
+        price__min=Min('price'),
+        price__max=Max('price')
+    )
+
     context = {
-        "products":products,
-        "tags":tags,
+        "products": products,
+        "tags": tags,
+        "categories": categories,
+        "vendors": vendors,
+        "min_max_price": min_max_price,
     }
 
     return render(request, 'core/product-list.html', context)
@@ -58,6 +73,7 @@ def category_list_view(request):
         "categories":categories
     }
     return render(request, 'core/category-list.html', context)
+
 
 
 def category_product_list__view(request, cid):
@@ -247,6 +263,11 @@ def add_to_cart(request):
         request.session['cart_data_obj'] = cart_product
     return JsonResponse({"data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj'])})
 
+ 
+
+ 
+
+
 
 
 def cart_view(request):
@@ -431,7 +452,6 @@ def test_chapa_payment(request):
     "Authorization": "Bearer CHASECK_TEST-PHIGIZhBowkvz0YDT9mYIsTw532JqFLB",
     "Content-Type": "application/json",
 }
-
 
             # ✅ Make request to Chapa API
             response = requests.post(
@@ -859,7 +879,6 @@ def ajax_contact_form(request):
 
 def about_us(request):
     return render(request, "core/about_us.html")
-
 
 def purchase_guide(request):
     return render(request, "core/purchase_guide.html")

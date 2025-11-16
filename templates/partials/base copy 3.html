@@ -1,0 +1,302 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, minimal-ui"/>
+
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900" rel="stylesheet" />
+
+    <!-- CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/bootstrap.extension.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/swiper.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+
+  	<title>Lwam Fashion</title>
+
+    <style>
+         .slide-title {
+        color: #008000 !important; /* clean green */
+    }
+        /* Make all navigation menu links green including cart and login */
+        .navigation-wrapper nav ul li a,
+        .navigation-wrapper nav ul li a .cart-title,
+        .navigation-wrapper nav ul li a .cart-label,
+        .navigation-wrapper nav ul li a i {
+            color: green !important;
+        }
+
+
+        .ht-1{
+        color: #008000 !important; /* clean green */
+    }
+        
+
+
+        /* Hover effect */
+        .navigation-wrapper nav ul li a:hover,
+        .navigation-wrapper nav ul li a:hover .cart-title,
+        .navigation-wrapper nav ul li a:hover .cart-label,
+        .navigation-wrapper nav ul li a:hover i {
+            color: darkgreen !important;
+        }
+
+        /* Optional: mobile menu links */
+        .mobile-header-wrapper-inner .mobile-menu-wrap nav ul li a {
+            color: green !important;
+        }
+
+        .mobile-header-wrapper-inner .mobile-menu-wrap nav ul li a:hover {
+            color: darkgreen !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADER -->
+    <div id="loader-wrapper"></div>
+
+    <!-- HEADER -->
+    <header class="type-1">
+        <div class="header-wrapper">
+            <a id="logo" href="/"><img src="{% static 'img/1.png' %}" alt="" /></a>
+
+            <div class="hamburger-icon">
+                <span></span><span></span><span></span><span></span>
+            </div>
+
+          
+        </div>
+
+        <div class="navigation-wrapper">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'core:vendor-list' %}">Home</a></li>
+                    <li><a href="/about/">About</a></li>
+                    <li><a href="/services/">Services</a></li>
+                    <li><a href="/portfolio/">Portfolio</a></li>
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/shop/">Shop</a></li>
+                    <li>
+                        <a href="/cart/">
+                            <span class="cart-icon">
+                                <i class="fa fa-shopping-bag"></i>
+                                <span class="cart-label">5</span>
+                            </span>
+                            <span class="cart-title">$1195.00</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="open-popup" data-rel="1">
+                            <i class="fa fa-user"></i> Login
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+
+
+    
+
+    <!-- MAIN CONTENT -->
+    <div id="content-block">
+
+        <!-- FULL PAGE SLIDER -->
+        <div class="swiper-entry slider-1">
+            <div class="swiper-container full-screen-height"
+                 data-direction="vertical"
+                 data-parallax="1"
+                 data-mousewheel="1"
+                 data-speed="1000">
+
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
+                <div class="swiper-wrapper">
+
+                    <!-- SLIDE 1 -->
+                    <div class="swiper-slide"> 
+                        <div class="leftside">
+                            <div class="sl right-align">Branding / Photoshooting</div>
+                            <div class="leftside-middle valign-middle">
+                                <div class="valign-middle-content">
+                                    <div class="banner-frame border-image"
+                                         style="border-image-source: url({% static 'img/1.jpg' %});"
+                                         data-swiper-parallax-y="-100%">
+                                        <div class="content" data-swiper-parallax-y="-70%">
+                                            <div class="text">
+                                                <div class="text-container">
+                                                    <div class="align">
+                                                <div class="h1-title" style="color: green;">
+    <span class="ht-1">
+        <a href="#" style="color: green;"> <h2> Beauty of Nature & Humanity</h2></a>
+    </span>
+</div>
+                                                        <div class="sa description">
+                                                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+                                                        </div>
+                                                        <a class="button">READ MORE</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sl left-align">For: MONOFashion Studio</div>
+                        </div>
+
+                        <a class="right-top lightbox"
+                            href="{% static 'img/thumbnail-104.jpg' %}"
+                            data-swiper-parallax-y="100%">
+                            <div class="content" style="background-image:url({% static 'img/thumbnail-104.jpg' %});"></div>
+                            <div class="content" style="background-image:url({% static 'img/thumbnail-104.jpg' %});"></div>
+                        </a>
+
+                        <a class="right-bottom lightbox"
+                            href="{% static 'img/thumbnail-105.jpg' %}"
+                            data-swiper-parallax-y="100%">
+                            <div class="content" style="background-image:url({% static 'img/thumbnail-105.jpg' %});"></div>
+                            <div class="content" style="background-image:url({% static 'img/thumbnail-105.jpg' %});"></div>
+                        </a>
+
+                    </div>
+
+                    <!-- SLIDE 2 -->
+                    <div class="swiper-slide"> 
+                        <div class="leftside">
+                            <div class="sl right-align">Branding / Photoshooting</div>
+                            <div class="leftside-middle valign-middle">
+                                <div class="valign-middle-content">
+                                    <div class="banner-frame border-image"
+                                         style="border-image-source: url({% static 'img/background-1_.jpg' %});"
+                                         data-swiper-parallax-y="-100%">
+                                        <div class="content" data-swiper-parallax-y="-70%">
+                                            <div class="text">
+                                                <div class="text-container">
+                                                    <div class="align">
+                                                        <div class="h3-title" style="color:green;">
+                                                            <span class="ht-1">
+                                                                <a href="#">Beauty of Nature & Humanity</a>
+                                                            </span>
+                                                        </div>
+                                                        <div class="sa description">
+                                                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.
+                                                        </div>
+                                                        <a class="button">READ MORE</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sl left-align">For: MONOFashion Studio</div>
+                        </div>
+
+                        <a class="right-top lightbox"
+                            href="{% static 'img/thumbnail-104_.jpg' %}"
+                            data-swiper-parallax-y="100%">
+                            <div class="content" style="background-image:url({% static 'img/thumbnail-104_.jpg' %});"></div>
+                            <div class="content" style="background-image:url({% static 'img/thumbnail-104_.jpg' %});"></div>
+                        </a>
+
+                        <a class="right-bottom lightbox"
+                            href="{% static 'img/thumbnail-105_.jpg' %}"
+                            data-swiper-parallax-y="100%">
+                            <div class="content" style="background-image:url({% static 'img/thumbnail-105_.jpg' %});"></div>
+                            <div class="content" style="background-image:url({% static 'img/thumbnail-105_.jpg' %});"></div>
+                        </a>
+
+                    </div>
+
+                    <!-- SLIDE 3 -->
+                    <div class="swiper-slide"> 
+                        <div class="leftside">
+                            <div class="sl right-align">Branding / Photoshooting</div>
+                            <div class="leftside-middle valign-middle">
+                                <div class="valign-middle-content">
+                                    <div class="banner-frame border-image"
+                                         style="border-image-source:url({% static 'img/background-1__.jpg' %});"
+                                         data-swiper-parallax-y="-100%">
+                                        <div class="content" data-swiper-parallax-y="-70%">
+                                            <div class="text">
+                                                <div class="text-container">
+                                                    <div class="align">
+                                                        <div class="h3-title" style="color:blue;">
+                                                            <span class="ht-1">
+                                                                <a href="#"><h2>  Beauty of Nature & Humanity </h2></a>
+                                                            </span>
+                                                        </div>
+                                                        <div class="sa description">
+                                                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.
+                                                        </div>
+                                                        <a class="button">READ MORE</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sl left-align">For: MONOFashion Studio</div>
+                        </div>
+<a class="right-top lightbox"
+   href="{% static 'img/thumbnail-104.jpg' %}">
+    <div class="content" style="background-image:url({% static 'img/thumbnail-104.jpg' %});"></div>
+    <div class="content" style="background-image:url({% static 'img/thumbnail-104.jpg' %});"></div>
+</a>
+
+<a class="right-bottom lightbox"
+   href="{% static 'img/thumbnail-105' %}">
+    <div class="content" style="background-image:url({% static 'img/thumbnail-105' %});"></div>
+    <div class="content" style="background-image:url({% static 'img/thumbnail-105.jpg' %});"></div>
+</a>
+                    </div>
+
+                </div>
+
+                <div class="swiper-pagination visible-xs"></div>
+
+                <div class="swiper-pager hidden-xs">
+                    <div class="swiper-pager-current">01</div>
+                    <div class="swiper-pager-total">03</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUPS -->
+    <div class="popup-wrapper">
+        <div class="bg-layer"></div>
+        <!-- LOGIN, REGISTER, RESET PASSWORD popups here -->
+    </div>
+
+    <!-- HIDDEN MARKERS -->
+    <div class="phone-marker visible-xs"></div>
+    <div class="tablet-marker visible-sm"></div>
+
+    <!-- SCRIPTS -->
+    <script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+    <script src="{% static 'js/swiper.jquery.min.js' %}"></script>
+    <script src="{% static 'js/global.js' %}"></script>
+
+    <!-- LIGHTBOX -->
+    <link href="{% static 'css/simplelightbox.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'js/simple-lightbox.min.js' %}"></script>
+
+</body>
+</html>
