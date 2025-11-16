@@ -1,6 +1,6 @@
 from django import views
 from django.urls import path, include
-from core.views import create_checkout_session, cart_views, checkout_view,save_checkout_info, add_to_cart, add_to_wishlist, ajax_add_review, ajax_contact_form, cart_view, category_list_view, category_product_list__view, checkout, customer_dashboard, delete_item_from_cart, filter_product, index, make_address_default, order_detail, payment_completed_view, payment_failed_view, product_detail_view, product_list_view, remove_wishlist, search_view, tag_list, update_cart, vendor_detail_view, vendor_list_view, wishlist_view, contact, about_us, purchase_guide, privacy_policy, terms_of_service,test_chapa_payment,delete_cart_item,update_cart_item,test_mobile_money
+from core.views import create_checkout_session, cart_views, checkout_view, save_checkout_info, add_to_cart, add_to_wishlist, ajax_add_review, ajax_contact_form, cart_view, category_list_view, category_product_list__view, checkout, customer_dashboard, delete_item_from_cart, filter_product, index, make_address_default, order_detail, payment_completed_view, payment_failed_view, product_detail_view, product_list_view, remove_wishlist, search_view, tag_list, update_cart, vendor_detail_view, vendor_list_view, wishlist_view, contact, about_us, purchase_guide, privacy_policy, terms_of_service, test_chapa_payment, delete_cart_item, update_cart_item, test_mobile_money
 
 app_name = "core"
 
@@ -20,15 +20,15 @@ urlpatterns = [
     path("filter-products/", filter_product, name="filter-product"),
     path("add-to-cart/", add_to_cart, name="add-to-cart"),
     path("cart/", cart_view, name="cart"),
-     path("carts/", cart_views, name="carts"),
+    path("carts/", cart_views, name="carts"),
     path("delete-from-cart/", delete_item_from_cart, name="delete-from-cart"),
     path("update-cart/", update_cart, name="update-cart"),
     path("api/create_checkout_session/<oid>/", create_checkout_session, name="api_checkout_session"),
-     path('test-mobile-money/', test_mobile_money, name='test_mobile_money'),
-      path('test-chapa-payment/', test_chapa_payment, name='test_chapa_payment'),
+    path('test-mobile-money/', test_mobile_money, name='test_mobile_money'),
+    path('test-chapa-payment/', test_chapa_payment, name='test_chapa_payment'),
     path("save_checkout_info/", save_checkout_info, name="save_checkout_info"),
     path("checkout/<oid>/", checkout, name="checkout"),
-        path("checkout/", checkout_view, name="checkout"),
+    path("checkout/", checkout_view, name="checkout"),
     path('paypal/', include('paypal.standard.ipn.urls')),
     path("payment-completed/<oid>/", payment_completed_view, name="payment-completed"),
     path("payment-failed/", payment_failed_view, name="payment-failed"),
@@ -44,6 +44,8 @@ urlpatterns = [
     path("purchase_guide/", purchase_guide, name="purchase_guide"),
     path("privacy_policy/", privacy_policy, name="privacy_policy"),
     path("terms_of_service/", terms_of_service, name="terms_of_service"),
-     path('cart/delete/<int:product_id>/', delete_cart_item, name='delete_cart_item'),
+    path('cart/delete/<int:product_id>/', delete_cart_item, name='delete_cart_item'),
     path('cart/update/<int:product_id>/', update_cart_item, name='update_cart_item'),
+
+    # ⚠️ Removed any 'include("core.api.urls")' to avoid recursion
 ]

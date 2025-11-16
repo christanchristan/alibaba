@@ -22,12 +22,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include("core.urls")),
-    path("user/", include("userauths.urls")),
-    path("useradmin/", include("useradmin.urls")),
-
-    # path("ckeditor/", include("ckeditor_uploader.urls")),
-    path("ckeditor5/", include('django_ckeditor_5.urls')),
+    path('', include('core.urls')),          # Web routes
+    path('api/', include('core.api.urls')),  # API routes
+    path('user/', include('userauths.urls')),
+    path('useradmin/', include('useradmin.urls')),
+    path('ckeditor5/', include('django_ckeditor_5.urls')),
 ]
 
 if settings.DEBUG:
