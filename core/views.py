@@ -35,6 +35,25 @@ import calendar
 from django.db.models import Count, Avg
 from django.db.models.functions import ExtractMonth
 from django.core import serializers
+
+import os
+import json
+import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import login
+from core.models import User  # adjust import if your User model is elsewhere
+
+import json
+import requests
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
+
 car_locations = {}
 
 
@@ -212,28 +231,8 @@ def verify_email_code(request):
 
     return JsonResponse({"success": False, "error": "Invalid request method"})
 
-GOOGLE_CLIENT_ID = "220674381580-vee67c9fb0c8lki4u6pv5tuin8lcqie7.apps.googleusercontent.com"
 
-
-
-
-import json
-import requests
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import login
-from core.models import User  # adjust import if your User model is elsewhere
-
-import json
-import requests
-from django.contrib.auth import login
-from django.contrib.auth.models import User
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from google.oauth2 import id_token
-from google.auth.transport import requests
-GOOGLE_CLIENT_ID = "220674381580-vee67c9fb0c8lki4u6pv5tuin8lcqie7.apps.googleusercontent.com"
-
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
 
 @csrf_exempt
 def google_one_tap_login(request):
