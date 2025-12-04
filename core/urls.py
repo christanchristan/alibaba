@@ -1,19 +1,24 @@
 from django import views
 from django.urls import path, include
-from core.views import create_checkout_session, cart_views, checkout_view, save_checkout_info, add_to_cart, add_to_wishlist, ajax_add_review, ajax_contact_form, cart_view, category_list_view, category_product_list__view, checkout, customer_dashboard, delete_item_from_cart, filter_product, index, make_address_default, order_detail, payment_completed_view, payment_failed_view, product_detail_view, product_list_view, remove_wishlist, search_view, tag_list, update_cart, vendor_detail_view, vendor_list_view, wishlist_view, contact, about_us, purchase_guide, privacy_policy, terms_of_service, test_chapa_payment, delete_cart_item, update_cart_item, test_mobile_money
+from core.views import create_checkout_session,send_email_code,google_one_tap_login, verify_email_code,car_update_location,car_join, cart_views, checkout_view, save_checkout_info, add_to_cart, add_to_wishlist, ajax_add_review, ajax_contact_form, cart_view, category_list_view, category_product_list__view, checkout, customer_dashboard, delete_item_from_cart, filter_product, index, make_address_default, order_detail, payment_completed_view, payment_failed_view, product_detail_view, product_list_view, remove_wishlist, search_view, tag_list, update_cart,  wishlist_view, contact, about_us, purchase_guide, privacy_policy, terms_of_service, test_chapa_payment, delete_cart_item, update_cart_item, test_mobile_money,verify_chapa_payment
 
 app_name = "core"
 
 urlpatterns = [
 
-    # Homepage
+    # Homepage\\\\\\ 
     path("", index, name="index"),
+    path('car_join/', car_join),
+    path('google-one-tap-login/',google_one_tap_login, name='google-one-tap-login'),
+      path('send_email_code/', send_email_code, name='send_email_code'),
+    path('verify_email_code/', verify_email_code, name='verify_email_code'),
+    
+    path('car_update_location/', car_update_location, name='car_update_location'),
     path("products/", product_list_view, name="product-list"),
     path("product/<pid>/", product_detail_view, name="product-detail"),
     path("category/", category_list_view, name="category-list"),
     path("category/<cid>/", category_product_list__view, name="category-product-list"),
-    path("vendors/", vendor_list_view, name="vendor-list"),
-    path("vendor/<vid>/", vendor_detail_view, name="vendor-detail"),
+   
     path("products/tag/<slug:tag_slug>/", tag_list, name="tags"),
     path("ajax-add-review/<int:pid>/", ajax_add_review, name="ajax-add-review"),
     path("search/", search_view, name="search"),
@@ -28,6 +33,7 @@ urlpatterns = [
     path('test-chapa-payment/', test_chapa_payment, name='test_chapa_payment'),
     path("save_checkout_info/", save_checkout_info, name="save_checkout_info"),
     path("checkout/<oid>/", checkout, name="checkout"),
+   
     path("checkout/", checkout_view, name="checkout"),
     path('paypal/', include('paypal.standard.ipn.urls')),
     path("payment-completed/<oid>/", payment_completed_view, name="payment-completed"),
@@ -46,6 +52,8 @@ urlpatterns = [
     path("terms_of_service/", terms_of_service, name="terms_of_service"),
     path('cart/delete/<int:product_id>/', delete_cart_item, name='delete_cart_item'),
     path('cart/update/<int:product_id>/', update_cart_item, name='update_cart_item'),
+     path('verify-chapa/<str:order_id>/', verify_chapa_payment, name='verify_chapa_payment')
+
 
     # ⚠️ Removed any 'include("core.api.urls")' to avoid recursion
 ]

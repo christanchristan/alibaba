@@ -8,9 +8,17 @@ from userauths.models import Profile, User
 
 # ---------------------------- Product Images ----------------------------
 class ProductImageSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()  # replace default 'images' field
+
     class Meta:
         model = ProductImages
-        fields = ['id', 'images']  # <- 'images', not 'image'
+        fields = ['id', 'images']
+
+    def get_images(self, obj):
+        request = self.context.get('request')  # get request to build full URL
+        if request:
+            return request.build_absolute_uri(obj.images.url)
+        return obj.images.url
 
 # ---------------------------- Product Reviews ----------------------------
 class ProductReviewSerializer(serializers.ModelSerializer):
@@ -22,7 +30,7 @@ class ProductReviewSerializer(serializers.ModelSerializer):
 
 # ---------------------------- Product ----------------------------
 class ProductSerializer(serializers.ModelSerializer):
-    p_images = ProductImageSerializer(many=True, read_only=True)
+    p_images = serializers.SerializerMethodField()
     reviews = ProductReviewSerializer(many=True, read_only=True)
     average_rating = serializers.SerializerMethodField()
 
@@ -33,9 +41,24 @@ class ProductSerializer(serializers.ModelSerializer):
             'product_status', 'featured', 'p_images', 'reviews', 'average_rating'
         ]
 
+    def get_p_images(self, obj):
+        request = self.context.get('request')  # Safely get request
+        images_qs = obj.p_images.all()  # ProductImages related objects
+        if images_qs.exists():
+            # Return full URL if request exists, otherwise just relative URLs
+            if request:
+                return [request.build_absolute_uri(img.images.url) for img in images_qs]
+            return [img.images.url for img in images_qs]
+        # Fallback: return main product.image if no ProductImages exist
+        if obj.image:
+            if request:
+                return [request.build_absolute_uri(obj.image.url)]
+            return [obj.image.url]
+        return []
+
     def get_average_rating(self, obj):
         from django.db.models import Avg
-        return obj.reviews.aggregate(avg=Avg('rating'))['avg']  # use related_name 'reviews'
+        return obj.reviews.aggregate(avg=Avg('rating'))['avg']
 
 # ---------------------------- Category ----------------------------
 class CategorySerializer(serializers.ModelSerializer):
@@ -45,6 +68,7 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'cid', 'title', 'image', 'products']
+
 # ---------------------------- Vendor ----------------------------
 class VendorSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True, source='product')

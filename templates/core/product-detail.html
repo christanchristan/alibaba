@@ -146,41 +146,7 @@
                                             <div class="tab-pane fade" id="Additional-info">
                                               
                                             </div>
-                                            <div class="tab-pane fade" id="Vendor-info">
-                                                <div class="vendor-logo d-flex mb-30">
-                                                    <img src="{{p.vendor.image.url}}" alt="" />
-                                                    <div class="vendor-name ml-15">
-                                                        <h6>
-                                                            <a href="vendor-details-2.html">{{p.vendor.title}}</a>
-                                                        </h6>
-                                                        <div class="product-rate-cover text-end">
-                                                            <div class="product-rate d-inline-block">
-                                                                <div class="product-rating" style="width: 90%"></div>
-                                                            </div>
-                                                            <span class="font-small ml-5 text-muted"> (32 reviews)</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <ul class="contact-infor mb-50">
-                                                    <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Address: </strong> <span>{{p.vendor.address}}</span></li>
-                                                    <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Contact Seller:</strong><span>{{p.vendor.contact}}</span></li>
-                                                </ul>
-                                                <div class="d-flex mb-55">
-                                                    <div class="mr-30">
-                                                        <p class="text-brand font-xs">Rating</p>
-                                                        <h4 class="mb-0">92%</h4>
-                                                    </div>
-                                                    <div class="mr-30">
-                                                        <p class="text-brand font-xs">Ship on time</p>
-                                                        <h4 class="mb-0">{{p.vendor.shipping_on_time}}%</h4>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-brand font-xs">Chat response</p>
-                                                        <h4 class="mb-0">{{p.vendor.chat_resp_time}}%</h4>
-                                                    </div>
-                                                </div>
-                                                <p>{{p.vendor.description}}</p>
-                                            </div>
+                                            
                                             <div class="tab-pane fade" id="Reviews">
                                                 <!--Comments-->
                                                 <div class="comments-area">
@@ -342,13 +308,7 @@
                                                             <span class="font-small ml-5 text-muted"> ({{ p.reviews.all.count }})</span>
 
                                                         </div>
-                                                        <div>
-                                                            {% if p.vendor %}
-                                                            <span class="font-small text-muted">By <a href="{% url 'core:vendor-detail' p.vendor.vid %}">{{p.vendor.title}}</a></span>
-                                                            {% else %}  
-                                                            <span class="font-small text-muted">By <a href="">Lwam Takele </a></span>
-                                                            {% endif %}
-                                                        </div>
+                                                       
                                                         <div class="product-card-bottom">
                                                             <div class="product-price">
                                                                 <span>$</span> <span class="current-product-price-{{ p.id }}">{{p.price}}</span>

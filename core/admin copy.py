@@ -22,7 +22,7 @@ class CartOrderAdmin(admin.ModelAdmin):
 
 
 class CartOrderProductsAdmin(admin.ModelAdmin):
-    list_display = ['order', 'invoice_no', 'item', 'image','qty', 'price', 'total']
+    list_display = ['order', 'vendor_confirmation', 'invoice_no', 'item', 'image','qty', 'price', 'total']
 
 
 class ProductReviewAdmin(admin.ModelAdmin):

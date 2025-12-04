@@ -31,34 +31,75 @@ def register_view(request):
     return render(request, "userauths/sign-up.html", context)
 
 
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.urls import reverse
+from django.contrib.auth.models import User
+
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.urls import reverse
+
+User = get_user_model()  # ✅ Use your custom User model
+
+
+
+
 def login_view(request):
+    # Redirect if user is already authenticated
     if request.user.is_authenticated:
-        messages.warning(request, f"Hey you are already Logged In.")
-        return redirect("core:index")
-    
+        messages.warning(request, "Hey, you are already logged in.")
+
+        # Check group membership for redirect
+        if request.user.is_superuser:
+            return redirect("useradmin:dashboard")
+        elif request.user.groups.filter(name="Vendor").exists():
+            return redirect("useradmin:vendor_dashboard")
+        elif request.user.groups.filter(name="Delivery").exists():
+            return redirect("delivery:delivery_dashboard")
+        else:
+            return redirect("core:index")  # customer/homepage
+
+    # Build absolute URL for Google One-Tap login (if used)
+    login_uri = request.build_absolute_uri(reverse('core:google-one-tap-login'))
+
     if request.method == "POST":
-        email = request.POST.get("email") # peanuts@gmail.com
-        password = request.POST.get("password") # getmepeanuts
+        email = request.POST.get("email")
+        password = request.POST.get("password")
 
-        try:
-            user = User.objects.get(email=email)
-            user = authenticate(request, email=email, password=password)
+        # Authenticate user
+        user = authenticate(request, email=email, password=password)
 
-            if user is not None:
-                login(request, user)
-                messages.success(request, "You are logged in.")
-                return redirect("core:index")
+        if user is not None:
+            login(request, user)
+            messages.success(request, "You are logged in.")
+
+            # ✅ Role/group based redirect after login
+            if user.is_superuser:
+                return redirect("useradmin:dashboard")
+                print("User is Superadmin!")
+            elif user.groups.filter(name="Vendor").exists():
+                print("User is Vendor!")  # DEBUG
+                return redirect("vendor:dashboard")
+            
+            elif user.groups.filter(name="Delivery").exists():
+              print("User is Vendor!")          
+              return redirect("delivery:dashboard")
             else:
-                messages.warning(request, "User Does Not Exist, create an account.")
-    
-        except:
-            messages.warning(request, f"User with {email} does not exist")
-        
+                return redirect("core:index")  # customer/homepage
+        else:
+            messages.warning(request, "Invalid email or password. Please try again or create an account.")
 
-    
-    return render(request, "userauths/sign-in.html")
+    # Render login page
+    return render(request, "userauths/sign-in.html", {'login_uri': login_uri})
 
-        
+
+
+
+
+
+
 
 def logout_view(request):
 

@@ -1,5 +1,9 @@
 from django.contrib import admin
 from django.utils.html import mark_safe
+from .admin_notifications import *
+from django.contrib.auth import get_user_model
+User = get_user_model()
+admin.site.get_urls_without_custom
 from core.models import (
     CartOrderProducts, Product, Category, Vendor, CartOrder,
     ProductImages, ProductReview, wishlist_model, Address
@@ -44,6 +48,7 @@ class ProductAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['title', 'category_image']
 
+
 # ---------------- Vendor Admin ----------------
 @admin.register(Vendor)
 class VendorAdmin(admin.ModelAdmin):
@@ -60,11 +65,14 @@ class VendorAdmin(admin.ModelAdmin):
             return []
         return ['user']
 
+    # Include JS for real-time vendor notifications
+    class Media:
+        js = ('js/vendor_notifications.js',)   # Make sure this file exists in your static folder
 # ---------------- CartOrder Admin ----------------
 @admin.register(CartOrder)
 class CartOrderAdmin(admin.ModelAdmin):
-    list_editable = ['paid_status', 'email', 'product_status', 'sku']
-    list_display = ['user', 'email', 'price', 'paid_status', 'order_date', 'product_status', 'sku']
+    list_editable = ['paid_status', 'email', 'product_status','vendor_confirmation','shipping_cost', 'shipping_estimate','sku']
+    list_display = ['user', 'email', 'price', 'paid_status','vendor_confirmation','order_date', 'product_status','shipping_cost', 'shipping_estimate','sku']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -75,34 +83,89 @@ class CartOrderAdmin(admin.ModelAdmin):
         except Vendor.DoesNotExist:
             return qs.none()
         return qs.filter(cartorderproducts__item__in=Product.objects.filter(vendor=vendor).values_list('title', flat=True)).distinct()
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
-# ---------------- CartOrderProducts Admin ----------------
 class CartOrderProductsAdmin(admin.ModelAdmin):
     list_display = [
-        'order_shipping', 'order_phone', 'invoice_no', 'item', 'vendor_name', 'image_link',
+        'order_shipping', 'order_phone', 'vendor_confirmation', 'invoice_no',
+        'item', 'vendor_name','customer_center', 'product', 'vendor_center', 'image_link',
         'qty', 'price', 'total'
     ]
 
     def get_queryset(self, request):
-        self.request = request  # store request for order_shipping/order_phone
+        self.request = request
         qs = super().get_queryset(request)
+
+        # Superusers see all
         if request.user.is_superuser:
             return qs
-        try:
-            vendor = Vendor.objects.get(user=request.user)
-        except Vendor.DoesNotExist:
-            return qs.none()
-        vendor_products_titles = Product.objects.filter(vendor=vendor).values_list('title', flat=True)
-        return qs.filter(item__in=vendor_products_titles)
+
+        # Vendors see only their products
+        vendor_products = Product.objects.filter(user=request.user)
+        return qs.filter(product__in=vendor_products)
 
     def vendor_name(self, obj):
-        try:
-            product = Product.objects.get(title=obj.item)
-            return (product.vendor.title, product.vendor.contact,product.vendor.address)
-        except Product.DoesNotExist:
-            return "-"
-    vendor_name.short_description = 'Vendor'
+        """
+        Display vendor info safely using the ForeignKey to Product
+        """
+        if obj.product and obj.product.user:
+            user = obj.product.user
+            email = getattr(user, 'email', '')
+            username = getattr(user, 'username', '')
+            bio = getattr(user, 'bio', '')
+            phone = getattr(user, 'phone', '')
+            return f"{email} - {username} - {bio} - {phone}"
+        return "-"
+    vendor_name.short_description = 'venderinfo'
 
+    # ⭐ ADDED METHOD (fix for admin error)
+    def vendor_center(self, obj):
+        """
+        Returns vendor center/location from product.user.state
+        """
+        try:
+            return obj.product.user.state
+        except:
+            return "-"
+    vendor_center.short_description = 'Vendor Center'
+
+    def order_shipping(self, obj):
+        order = obj.order
+        if not order:
+            return "-"
+
+        if self.request.user.is_superuser:
+            return f"{order.full_name}, {order.address}, {order.state}, {order.country}"
+        else:
+            return f"{order.address}, {order.state}, {order.country}"
+    order_shipping.short_description = 'Shipping Info'
+
+    def order_phone(self, obj):
+        order = obj.order
+        if not order:
+            return "-"
+        return order.phone if self.request.user.is_superuser else "-"
+    order_phone.short_description = 'Phone'
+
+    def image_link(self, obj):
+        if obj.image:
+            image_url = f"/media/{obj.image.lstrip('media/')}"
+            return mark_safe(
+                f'<a href="{image_url}" target="_blank">'
+                f'<img src="{image_url}" width="50" height="50"/></a>'
+            )
+        return "-"
+    image_link.short_description = 'Image'
+
+def vendor_center(self, obj):
+    """
+    Return vendor center from product.user.state
+    """
+    try:
+        return obj.product.user.state
+    except:
+        return "-"
     def order_shipping(self, obj):
         order = obj.order
         if not order:
@@ -117,19 +180,51 @@ class CartOrderProductsAdmin(admin.ModelAdmin):
         order = obj.order
         if not order:
             return "-"
-        if self.request.user.is_superuser:
-            return order.phone
-        return "-"
+        return order.phone if self.request.user.is_superuser else "-"
     order_phone.short_description = 'Phone'
 
     def image_link(self, obj):
         if obj.image:
             image_url = f"/media/{obj.image.lstrip('media/')}"
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" width="50" height="50"/></a>')
+            return mark_safe(
+                f'<a href="{image_url}" target="_blank">'
+                f'<img src="{image_url}" width="50" height="50"/></a>'
+            )
         return "-"
     image_link.short_description = 'Image'
 
+
 admin.site.register(CartOrderProducts, CartOrderProductsAdmin)
+
+
+
+
+# admin.py
+from django.contrib import admin
+from django.urls import path
+from django.shortcuts import render
+from django.contrib.auth.models import User  # just to attach admin
+
+class NotificationAdmin(admin.ModelAdmin):
+    change_list_template = "admin/notifications.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('notifications/', self.admin_site.admin_view(self.notification_view), name='notifications'),
+        ]
+        return custom_urls + urls
+
+    def notification_view(self, request):
+        notifications = [
+            {"message": "New user registered", "level": "info"},
+            {"message": "Order #1234 pending", "level": "warning"},
+        ]
+        return render(request, "admin/notifications.html", {"notifications": notifications})
+
+# Register dummy model just to attach admin view
+admin.site.register(User, NotificationAdmin)
+
 
 # ---------------- ProductReview Admin ----------------
 @admin.register(ProductReview)

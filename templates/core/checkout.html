@@ -29,6 +29,7 @@
                     <p class="card-text fs-sm">Qty: {{ o.qty }}</p>
                     <p class="card-text fs-sm">Price: ${{ o.price }}</p>
                     <p class="card-text fs-sm">Total: ${{ o.total }}</p>
+                     
                   </div>
                 </div>
               </div>
@@ -48,28 +49,28 @@
           </div>
           <div class="d-flex justify-content-between mb-2">
             <p class="fw-bold">Shipping</p>
-            <p>$0</p>
+            <p>${{ order.shipping_cost|default:"0.00" }}</p>
           </div>
           <div class="d-flex justify-content-between mb-2">
             <p class="fw-bold">Discount</p>
             <p>${{ order.saved|default:"0.00" }}</p>
           </div>
           <div class="d-flex justify-content-between mb-2">
-            <p class="fw-bold">Total</p>
+            <p class="fw-bold">SubTotal(products only) </p>
+            <p>${{ order.total_price}}</p>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <p class="fw-bold">Grand Total </p>
             <p>${{ order.price }}</p>
           </div>
         </div>
 
         <!-- Mobile Money Input -->
-        <div class="mb-3">
-          <input type="text" id="phone" class="form-control mb-2" placeholder="Phone" />
-          <input type="text" id="otp" class="form-control" placeholder="OTP" />
-        </div>
 
         <!-- Test Mobile Money -->
         <h4>Test Mobile Money Accounts</h4>
         <button id="awash-btn" type="button" class="btn w-100 mb-2" style="background-color: brown; color: white;">
-          Awash Bank — Phone: 0900123456 | OTP: 12345
+        Pay Using awash Bank 
         </button>
 
         <!-- Test Credit Card -->
@@ -109,28 +110,33 @@ document.addEventListener("DOMContentLoaded", function () {
   const awashBtn = document.getElementById('awash-btn');
   if (awashBtn) {
     awashBtn.addEventListener('click', function () {
-      const phone = document.getElementById('phone').value || '0900123456';
-      const otp = document.getElementById('otp').value || '12345';
-      const orderId = "{{ order.oid }}";
-       const amount =  "{{ order.price }}";
+     const otp = '12345';
+    const orderId = "{{ order.oid }}";
+    const amount = "{{ order.price }}";
+   
+    const first_name = "{{ order.user.first_name|default:''}}";
+    const last_name  = "{{ order.user.last_name|default:'' }}";
+    const email = "{{ order.email|default:'' }}";
+    const phone = "{{ order.phone|default:'' }}";
 
-      console.log("📤 Sending test Awash payment:", {amount , phone, otp, orderId});
-
+    console.log("📤 Sending test Awash payment:", {
+      amount, phone, otp, orderId, email, first_name, last_name
+    });
       fetch("{% url 'core:test_chapa_payment' %}", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": "{{ csrf_token }}"
         },
-        body: JSON.stringify({ amount,phone, otp, order_id: orderId })
+        body: JSON.stringify({ amount, phone, otp, order_id: orderId,email,first_name, last_name})
       })
       .then(response => response.json())
       .then(data => {
         console.log("🧾 Backend response:", data);
-        if (data.status === "success") {
-          alert("✅ Payment successful! Transaction ID: " + data.transaction_id);
+        if (data.status === "success" && data.payment_url) {
+          window.location.href = data.payment_url;
         } else {
-          alert("❌ Payment failed: " + data.message);
+          alert("❌ Payment initialization failed: " + (data.message || "Unknown error"));
         }
       })
       .catch(err => {
@@ -139,13 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   }
-
-
-
-
-
-
-
 
   // --- Stripe ---
   const stripe = Stripe("{{ stripe_publishable_key }}");
@@ -197,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
 </script>
 
 {% endblock content %}

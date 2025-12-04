@@ -1,0 +1,72 @@
+{% extends 'delivery/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Order List</h2>
+            <p>Manage all your Olders from here</p>
+        </div>
+       
+    </div>
+
+    <!-- Status badges filter -->
+    <div class="mb-3">
+        <a href="?status=" class="badge {% if not status_filter %}bg-primary{% else %}bg-secondary{% endif %}">
+            All  ({{ status_counts.all }})
+        </a>
+        <a href="?status=published" class="badge {% if status_filter == 'published' %}bg-primary{% else %}bg-secondary{% endif %}">
+            Accepted ({{ status_counts.published }})
+        </a>
+        <a href="?status=draft" class="badge {% if status_filter == 'draft' %}bg-primary{% else %}bg-secondary{% endif %}">
+            pending ({{ status_counts.draft }})
+        </a>
+        <a href="?status=disabled" class="badge {% if status_filter == 'disabled' %}bg-primary{% else %}bg-secondary{% endif %}">
+            failed({{ status_counts.disabled }})
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row align-items-center">
+                <div class="col-md-2 col-6">
+                    <select class="form-select">
+                        <option selected>Status</option>
+                        <option>Active</option>
+                        <option>Disabled</option>
+                        <option>Show all</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+        <div class="card-body">
+            {% for p in all_products %}
+            <article class="itemlist">
+                <div class="row align-items-center">
+                    <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+                        <a class="itemside" href="">
+                            <div class="left">
+                                <img src="" style="width: 100px; height: 100px; object-fit: cover; border-radius: 15px;" class="img-sm img-thumbnail" alt="Item" />
+                            </div>
+                            <div class="info">
+                                <h6 class="mb-0"></h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 col-4 col-price"><span>${{p.price}}</span></div>
+                    <div class="col-lg-2 col-sm-2 col-4 col-status"><span class="badge alert-dark">{{p.product_status|title}}</span></div>
+                    <div class="col-lg-1 col-sm-2 col-4 col-date"><span>{{p.date}}</span></div>
+                    <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
+                    
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+    
+</section>
+
+{% endblock content %}

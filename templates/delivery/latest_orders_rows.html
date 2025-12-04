@@ -1,0 +1,40 @@
+{% for l in latest_orders %}
+<tr>
+    <td><a href="#" class="fw-bold">#{{ l.oid }}</a></td>
+    <td>{{ l.full_name|title }}</td>
+    <td>{{ l.email }}</td>
+    <td>{{ l.phone }}</td>
+    <td>{{ l.order_date }}</td>
+    <td>${{ l.price }}</td>
+    <td>
+        <span class="payment-status" id="payment-status-{{ l.id }}">
+            {% if l.paid_status %}
+                <span class="badge badge-pill badge-soft-success">Paid</span>
+            {% else %}
+                <span class="badge badge-pill badge-soft-danger">Not Paid</span>
+            {% endif %}
+        </span>
+    </td>
+    <td>
+        {% for item in l.cartorderproducts_set.all %}
+            {% if l.paid_status %}
+                {% if item.vendor_confirmation == True %}
+                    <span class="badge badge-pill badge-soft-success">{{ item.item }}: Confirmed ✔</span><br>
+                {% elif item.vendor_confirmation == False %}
+                    <span class="badge badge-pill badge-soft-danger">{{ item.item }}: Not Available ❌</span><br>
+                {% else %}
+                    <div class="btn-group mb-1" role="group" id="btn-container-{{ item.id }}">
+                        <button class="btn btn-sm btn-success confirm-btn" data-id="{{ item.id }}" data-status="True">{{ item.item }}: Confirm</button>
+                        <button class="btn btn-sm btn-danger confirm-btn" data-id="{{ item.id }}" data-status="False">{{ item.item }}: Not Available</button>
+                    </div><br>
+                {% endif %}
+            {% else %}
+                <span class="badge badge-pill badge-soft-secondary" id="awaiting-{{ item.id }}">{{ item.item }}: Awaiting Payment ⏳</span><br>
+            {% endif %}
+        {% endfor %}
+    </td>
+    <td>
+        <a href="{% url 'vendor:order_detail' l.id %}" class="btn btn-xs">View details</a>
+    </td>
+</tr>
+{% endfor %}

@@ -1,0 +1,16 @@
+Origin,Destination,Method,Weight,DeliveryTimeDays,CostETB
+Addis Ababa,Gondar,Air,2.5,3,450
+Addis Ababa,Gondar,Ground,2.5,4,400
+Addis Ababa,Gondar,Express,2.5,2,480
+Addis Ababa,Bahir Dar,Air,10.0,3,470
+Addis Ababa,Bahir Dar,Ground,10.0,4,320
+Addis Ababa,Bahir Dar,Express,10.0,2,400
+Mekelle,Addis Ababa,Air,12.0,4,400
+Mekelle,Addis Ababa,Ground,12.0,5,380
+Mekelle,Addis Ababa,Express,12.0,3,420
+Jimma,Hawassa,Air,5.0,1,280
+Jimma,Hawassa,Ground,5.0,2,250
+Jimma,Hawassa,Express,5.0,1,260
+Bahir Dar,Mekelle,Air,10.0,3,470
+Bahir Dar,Mekelle,Ground,10.0,4,320
+Bahir Dar,Mekelle,Express,10.0,2,400

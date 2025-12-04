@@ -1,314 +1,232 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-    <main class="main pages">
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                    <span></span> Pages <span></span> My Account
-                </div>
-            </div>
+
+<style>
+.dashboard-menu .nav-link {
+    color: rgb(59, 183, 126); /* text color */
+}
+
+.dashboard-menu .nav-link.active {
+    background-color: rgb(59, 183, 126); /* active background */
+    color: #fff; /* active text */
+}
+
+.dashboard-menu .nav-link:hover {
+    background-color: rgb(49, 153, 106); /* darker green on hover */
+    color: #fff; /* text on hover */
+}
+</style>
+
+<main class="main pages">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb">
+       <a href="{% url 'core:dashboard' %}"><i class="fi-rs-home mr-5"></i>Home</a>
+        <span></span> Dashboard
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content pt-150 pb-150">
+    <div class="container">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+          <div class="dashboard-menu">
+            <ul class="nav flex-column nav-pills" id="dashboardTabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="dashboard-tab" data-bs-toggle="pill" href="#dashboard" role="tab">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="orders-tab" data-bs-toggle="pill" href="#orders" role="tab">Orders</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-bs-toggle="pill" href="#profile" role="tab">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="address-tab" data-bs-toggle="pill" href="#address" role="tab">My Address</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="shipment-tab" data-bs-toggle="pill" href="#shipment" role="tab">Following Shipment</a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="page-content pt-150 pb-150">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-10 m-auto">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="dashboard-menu">
-                                    <ul class="nav flex-column" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="fi-rs-user mr-10"></i>Profile</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
-                                        </li>
-                                        <!-- <li class="nav-item">
-                                            <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
-                                        </li> -->
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="page-login.html"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="tab-content account dashboard-content pl-50">
-                                    <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                        <div class="card">
-                                            <div class="card-header border-bottom">
-                                                <h3 class="mb-0">My Profile</h3>
-                                            </div>
-                                            <div class="card-body mb-2" style="display: flex; align-items: center; gap: 10px;">
-                                                <div>
-                                                    {% if user_profile.image %}
-                                                    <span><img src="{{ user_profile.image.url }}" style="width: 150px; object-fit: cover; border-radius:50%; height:150px;" alt=""></span>
-                                                    {% else %}
-                                                    <span><img src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg" style="width: 150px; object-fit: cover; border-radius:50%; height:150px;" alt=""></span>
 
-                                                    {% endif %}
-                                                </div>
+        <!-- Tab Content -->
+        <div class="col-md-9">
+          <div class="tab-content">
 
-                                                <div>
-                                                    <span><input class="mb-2" type="text" value="Name - {{ user_profile.full_name }}"></span>
-                                                    <span><input class="mb-2" type="text" value="Bio - {{ user_profile.bio }}"></span>
-                                                    <span><input class="mb-2" type="text" value="Phone - {{ user_profile.phone }}"></span>
-                                                    {% if user_profile.verified == True %}
-                                                    <div class="p-4 border rounded">
-                                                        <span>Verified</span> <span> <i class="fas fa-check-circle"></i> </span>
-                                                    </div>
-                                                    {% else %}
-                                                    <div class="p-4 border rounded">
-                                                        <span>Not verified </span> <span> <i class="fas fa-x"></i> </span>
-                                                    </div>
-                                                    {% endif %}
-                                                    <div class="p-4 border rounded">
-                                                       <a href="{% url 'userauths:profile-update' %}" class="btn btn-succees">Edit Profile</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h3 class="mb-0">Hello {{request.user|title}}!</h3>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>
-                                                    From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>,<br />
-                                                    manage your <a href="#">shipping and billing addresses</a> and <a href="#">edit your password and account details.</a>
-                                                </p>
-                                            </div>
-                                            <!-- <div class="mt-4">
-                                                <p>{{ month }}</p>
-                                                <p>{{ total_orders }}</p>
-                                            </div> -->
-                                            <div style="height: 800px; width: 800px; object-fit: cover;">
-                                                <canvas id="myChart"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h3 class="mb-0">Your Orders</h3>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Order</th>
-                                                                <th>Date</th>
-                                                                <th>Status</th>
-                                                                <th>Paid Status</th>
-                                                                <th>Total</th>
-                                                                <th>Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for o in orders_list %}
-                                                            <tr>
-                                                                <td>INVOICE_NO-{{o.id}}</td>
-
-                                                                <td>{{o.order_date}}</td>
-                                                                <td>{{o.product_status|title}}</td>
-                                                                {% if o.paid_status == True %}
-                                                                <td class="text-success"><b>✓</b></td>
-                                                                {% else %}
-                                                                <td class="text-danger"><b><span>X</span></b></td>
-
-                                                                {% endif %}
-                                                                <td>${{o.price}}</td>
-                                                                <td><a href="{% url 'core:order-detail' o.id %}" class="btn-small d-block">View</a></td>
-                                                            </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h3 class="mb-0">Orders tracking</h3>
-                                            </div>
-                                            <div class="card-body contact-from-area">
-                                                <p>To track your order please enter your OrderID in the box below and press "Track" button. This was given to you on your receipt and in the confirmation email you should have received.</p>
-                                                <div class="row">
-                                                    <div class="col-lg-8">
-                                                        <form class="contact-form-style mt-30 mb-50" action="#" method="post">
-                                                            <div class="input-style mb-20">
-                                                                <label>Order ID</label>
-                                                                <input name="order-id" placeholder="Found in your order confirmation email" type="text" />
-                                                            </div>
-                                                            <div class="input-style mb-20">
-                                                                <label>Billing email</label>
-                                                                <input name="billing-email" placeholder="Email you used during checkout" type="email" />
-                                                            </div>
-                                                            <button class="submit submit-auto-width" type="submit">Track</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                        <div class="row">
-                                                <div>
-                                                    <form class="mb-4" method="POST" > {% csrf_token %}
-                                                        <div class="card-hdeader">
-                                                            <h5>Add Address</h5>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <input placeholder="Address" required="" class="form-control" name="address" type="text" />
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <input placeholder="Phone" required="" class="form-control" name="mobile" />
-                                                            </div>
-                                                            <div class="col-md-12">
-                                                                <button type="submit" class="btn btn-fill-out submit font-weight-bold" name="submit" value="Submit">Save Address</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <hr>
-                                                <br>
-                                                {% for a in address %}
-                                            <div class="col-lg-6">
-                                                <div class="card mb-3 mb-lg-0">
-
-                                                    <div class="card-header">
-                                                        <h4 class="mb-0">Address {{ forloop.counter }}</h4>
-                                                    </div>
-
-
-
-
-                                                    <div class="card-body border rounded ">
-                                                        <address>
-                                                            <p>{{ a.address }}</p>
-                                                            <p>{{ a.mobile }}</p>
-                                                            <!-- <p>{{ a.id }}</p> -->
-                                                            <!-- <p>{{ a.status }}</p> -->
-
-                                                        </address>
-                                                        <br>
-                                                        {% if a.status %}
-                                                            <i data-address-id="{{ a.id }}" class="fa fa-check-circle text-success check{{ a.id }} check"></i>
-                                                            <button data-address-id="{{ a.id }}"  style="display: none;" class="btn make-default-address button{{ a.id }} action_btn">Make Default</button>
-
-                                                        {% else %}
-                                                            <i data-address-id="{{ a.id }}" style="display: none;" class="fa fa-check-circle text-success check check{{ a.id }}"></i>
-                                                            <button data-address-id="{{ a.id }}"   class="btn make-default-address button{{ a.id }} action_btn">Make Default</button>
-                                                        {% endif %}
-
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5>Account Details</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>Already have an account? <a href="page-login.html">Log in instead!</a></p>
-                                                <form method="post" name="enq">
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label>First Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="name" type="text" />
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label>Last Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="phone" />
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Display Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="dname" type="text" />
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Email Address <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="email" type="email" />
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Current Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="password" type="password" />
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>New Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="npassword" type="password" />
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Confirm Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control" name="cpassword" type="password" />
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <button type="submit" class="btn btn-fill-out submit font-weight-bold" name="submit" value="Submit">Save Change</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Dashboard Map -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+              <div class="card">
+                <div class="card-header">
+                  <h3>Hello {{ request.user.username|title }}!</h3>
                 </div>
+                <div class="card-body">
+                  <p>Your current car location:</p>
+                  <div id="map" style="height: 500px;"></div>
+                  <p id="current-latlng">Lat/Lng: loading...</p>
+                  <p id="current-address">Address: loading...</p>
+                </div>
+              </div>
             </div>
+
+            <!-- Orders -->
+            <div class="tab-pane fade" id="orders" role="tabpanel">
+              <div class="card">
+                <div class="card-header"><h3>Your Orders</h3></div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Order</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for o in orders_list %}
+                      <tr>
+                        <td>{{ o.id }}</td>
+                        <td>{{ o.order_date }}</td>
+                        <td>{{ o.product_status|title }}</td>
+                        <td>${{ o.price }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile -->
+            <div class="tab-pane fade" id="profile" role="tabpanel">
+              <div class="card">
+                <div class="card-header"><h3>Profile</h3></div>
+                <div class="card-body">
+                  <p>Name: {{ user_profile.full_name }}</p>
+                  <p>Phone: {{ user_profile.phone }}</p>
+                  <p>Bio: {{ user_profile.bio }}</p>
+                  {% if user_profile.verified %}
+                    <p>Status: Verified <i class="fas fa-check-circle text-success"></i></p>
+                  {% else %}
+                    <p>Status: Not Verified <i class="fas fa-times text-danger"></i></p>
+                  {% endif %}
+                  <a href="{% url 'userauths:profile-update' %}" class="btn btn-success">Edit Profile</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="tab-pane fade" id="address" role="tabpanel">
+              <div class="card">
+                <div class="card-header"><h3>My Addresses</h3></div>
+                <div class="card-body">
+                  <form method="POST">{% csrf_token %}
+                    <input type="text" name="address" placeholder="Address" required>
+                    <input type="text" name="mobile" placeholder="Phone" required>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                  </form>
+                  <hr>
+                  {% for a in address %}
+                    <p>{{ a.address }} - {{ a.mobile }} {% if a.status %}(Default){% endif %}</p>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <!-- Following Shipment -->
+            <div class="tab-pane fade" id="shipment" role="tabpanel">
+              <div class="card">
+                <div class="card-header"><h3>Following Shipment</h3></div>
+                <div class="card-body">
+                  <p>Track your shipments in real-time on the map below:</p>
+                  <div id="shipment-map" style="height: 400px;"></div>
+                  <ul id="shipment-list" class="mt-3">
+                    {% for s in shipment_list %}
+                      <li>Order {{ s.id }} - {{ s.status }} - Lat: {{ s.lat }}, Lng: {{ s.lng }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-    </main>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Leaflet JS and CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  // Main car map
+  const map = L.map('map').setView([0, 0], 15);
+  L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=pbb2sew7SkM9L4WTtN44', {
+    attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+    tileSize: 512,
+    zoomOffset: -1,
+    crossOrigin: true
+  }).addTo(map);
+
+  const carIcon = L.icon({
+    iconUrl: '{% static "assets/car.png" %}',
+    iconSize: [40, 40],
+    iconAnchor: [20, 20]
+  });
+
+  let carMarker;
+
+  function updateCarLocation(lat, lng) {
+    if (!carMarker) {
+      carMarker = L.marker([lat, lng], {icon: carIcon}).addTo(map);
+    } else {
+      carMarker.setLatLng([lat, lng]);
+    }
+    map.setView([lat, lng], 15);
+    document.getElementById('current-latlng').innerText = `Lat/Lng: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }
+
+  // Shipment map
+  const shipmentMap = L.map('shipment-map').setView([0, 0], 2);
+  L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=pbb2sew7SkM9L4WTtN44', {
+    attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+    tileSize: 512,
+    zoomOffset: -1,
+    crossOrigin: true
+  }).addTo(shipmentMap);
+
+  const shipmentMarkers = {};
 
 
+  
+  // WebSocket for real-time updates
+  const ws = new WebSocket('ws://localhost:8000/ws/car_tracking/');
+  ws.onmessage = function(event) {
+    const data = JSON.parse(event.data);
 
-    <script>
-        const labels = {{ month|safe }}
+    // Update main car map
+    if(data.lat && data.lng){
+      updateCarLocation(data.lat, data.lng);
+    }
 
-        const data = {
-          labels: labels,
-          datasets: [{
-            label: 'Orders',
-            backgroundColor: 'rgb(59, 183, 126)',
-            borderColor: 'rgb(59, 183, 126)',
-            data: {{ total_orders|safe }}
-          }],
+    // Update shipments on shipment map
+    if(data.shipments){
+      data.shipments.forEach(s => {
+        if(shipmentMarkers[s.id]){
+          shipmentMarkers[s.id].setLatLng([s.lat, s.lng]);
+        } else {
+          shipmentMarkers[s.id] = L.marker([s.lat, s.lng], {icon: carIcon}).addTo(shipmentMap);
+        }
+      });
+    }
+  };
+</script>
 
-        };
-
-
-
-        const config = {
-          type: 'bar',
-          data: data,
-          options: {
-            tooltips: {enabled: false},
-            hover: {mode: null},
-          }
-        };
-
-        const myChart = new Chart(
-            document.getElementById('myChart'),
-            config
-        );
-      </script>
 {% endblock content %}

@@ -109,6 +109,14 @@ def orderss(request):
     return render(request, "useradmin/orderss.html", context)
 
 
+@admin_required
+def vendor_dashboard(request):
+    orders = ContactUs.objects.all()
+    context = {
+        'orderss':orders,
+    }
+    return render(request, "useradmin/vendor_dashboard.html", context)
+
 
 @admin_required
 def ordersss(request):

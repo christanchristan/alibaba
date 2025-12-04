@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Vendor E-commerce Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets2/imgs/theme/favicon.svg' %}" />
+    <link href="{% static 'assets2/css/main.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        @keyframes flashBell {
+            0%, 100% { color: red; }
+            50% { color: orange; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="screen-overlay"></div>
+
+<aside class="navbar-aside" id="offcanvas_aside">
+    <div class="aside-top">
+        <a href="/vendor/" class="brand-wrap">
+            <img src="https://clipground.com/images/ecommerce-logo-png-11.png" class="logo" alt="E-commerce Dashboard" />
+        </a>
+        <div>
+            <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
+        </div>
+    </div>
+    <nav>
+        <ul class="menu-aside">
+            <li class="menu-item {% if '/vendor/dashboard/' in request.path %}active{% endif %}">
+                <a class="menu-link" href="/vendor/">
+                    <i class="icon material-icons md-home"></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li class="menu-item {% if '/vendor/products/' in request.path %}active{% endif %}">
+                <a class="menu-link" href="{% url 'vendor:dashboard-products' %}">
+                    <i class="icon material-icons md-shopping_bag"></i>
+                    <span class="text">Products</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" href="{% url 'vendor:dashboard-add-products' %}">
+                    <i class="icon material-icons md-add_box"></i>
+                    <span class="text">Add product</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" href="{% url 'vendor:shop_page' %}">
+                    <i class="icon material-icons md-store"></i>
+                    <span class="text">Shop Page</span>
+                </a>
+            </li>
+            <li class="menu-item {% if '/vendor/orderss/' in request.path %}active{% endif %}">
+                <a class="menu-link" href="{% url 'vendor:orderss' %}">
+                    <i class="icon material-icons md-shopping_cart"></i>
+                    <span class="text">Contact</span>
+                </a>
+            </li>
+            <li class="menu-item {% if '/vendor/orderss/' in request.path %}active{% endif %}">
+                <a class="menu-link" href="{% url 'vendor:ordersss' %}">
+                    <i class="icon material-icons md-shopping_cart"></i>
+                    <span class="text">Contact of user</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" href="{% url 'vendor:reviews' %}">
+                    <i class="icon material-icons md-comment"></i>
+                    <span class="text">Reviews</span>
+                </a>
+            </li>
+        </ul>
+        <hr />
+        <ul class="menu-aside">
+            <li class="menu-item">
+                <a class="menu-link" href="{% url 'vendor:settings' %}">
+                    <i class="icon material-icons md-settings"></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" href="{% url 'vendor:change_password' %}">
+                    <i class="icon material-icons md-lock"></i>
+                    <span class="text">Change Password</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" href="{% url 'userauths:sign-out' %}">
+                    <i class="icon material-icons md-arrow_forward"></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+<main class="main-wrap">
+    <header class="main-header navbar">
+        <div class="col-search"></div>
+        <div class="col-nav">
+            <div id="vendor-notification-area" style="float:right; margin-right:20px; position:relative;">
+                <span id="notification-icon" style="font-size:22px; cursor:pointer;">
+                    🔔 <span id="notif-count" style="color:red;font-weight:bold;">0</span>
+                </span>
+                <div id="notif-dropdown"
+                     style="display:none; position:absolute; background:#fff; border:1px solid #ccc;
+                            width:250px; right:0; top:25px; padding:10px; max-height:300px; overflow-y:auto;">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock content %}
+
+    <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+            <div class="col-sm-6">
+                <script>document.write(new Date().getFullYear());</script>
+                &copy; Lwam fashion design.
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end">All rights reserved</div>
+            </div>
+        </div>
+    </footer>
+</main>
+
+<script src="{% static 'assets2/js/vendors/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets2/js/vendors/bootstrap.bundle.min.js' %}"></script>
+
+<!-- Load external WebSocket JS file -->
+<script src="{% static 'js/vendor_notifications.js' %}"></script>
+
+</body>
+</html>
+

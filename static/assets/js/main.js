@@ -8,6 +8,23 @@
         });
         $("#onloadModal").modal("show");
     });
+
+
+    document.querySelectorAll(".alibaba-cat-item").forEach(item => {
+    item.addEventListener("mouseenter", function() {
+        const target = this.getAttribute("data-target");
+
+        document.querySelectorAll(".alibaba-sub-panel").forEach(p => {
+            p.style.display = "none";
+        });
+
+        const panel = document.getElementById(target);
+        if(panel){
+            panel.style.display = "block";
+        }
+    });
+});
+
     /*-----------------
         Menu Stick
     -----------------*/

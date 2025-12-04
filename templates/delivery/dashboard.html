@@ -1,0 +1,210 @@
+{% extends 'delivery/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Dashboard</h2>
+            <p>Whole data about your business here</p>
+        </div>
+        <div>
+            <a href="#" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create Product</a>
+        </div>
+    </div>
+
+    <!-- Dashboard Metrics -->
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Revenue</h6>
+                        <span>${{ revenue.price|floatformat:2|intcomma }}</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Orders</h6>
+                        <span>{{total_orders_count.count}}</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Products</h6>
+                        <span>{{all_products.count}}</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Monthly Earning</h6>
+                        <span>{{ monthly_revenue.price|floatformat:2|intcomma }}</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest Orders Table -->
+    <div class="card mb-4">
+        <header class="card-header">
+            <h4 class="card-title">Latest orders</h4>
+        </header>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle table-nowrap mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="align-middle" scope="col">Order ID</th>
+                            <th class="align-middle" scope="col">Customer Name</th>
+                            <th class="align-middle" scope="col"> Vendor Name</th>
+                             <th class="align-middle" scope="col"> Item Name</th>
+                            <th class="align-middle" scope="col">number of items</th>
+                            <th class="align-middle" scope="col">Departure point</th>
+                            <th class="align-middle" scope="col">final destination</th>
+                            <th class="align-middle" scope="col">date of delivery</th>
+                            <th class="align-middle" scope="col">Pass/confirm</th>
+                          
+                            <th class="align-middle" scope="col">View Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="latest-orders-tbody">
+                        {% include "vendor/latest_orders_rows.html" %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Notification Sound -->
+<audio id="notification-sound">
+    <source src="{% static 'sound/notification.mp3' %}" type="audio/mpeg">
+</audio>
+
+<style>
+/* 🔔 Shake animation for bell */
+@keyframes bell-shake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-15deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.bell-shake {
+  animation: bell-shake 0.6s ease;
+}
+</style>
+
+<!-- WebSocket & AJAX for live updates -->
+<script>
+const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+const socket = new WebSocket(ws_scheme + "://" + window.location.host + "/ws/vendor/notifications/");
+
+let lastNotificationCount = 0;
+
+// SOUND
+function playNotificationSound() {
+    document.getElementById("notification-sound").play();
+}
+
+// SHAKE
+function shakeBell() {
+    const icon = document.getElementById("notification-icon");
+    icon.classList.add("bell-shake");
+    setTimeout(() => icon.classList.remove("bell-shake"), 700);
+}
+
+/*  
+---------------------------------------------
+✨ NEW ADDITION: Refresh page when bell clicked
+---------------------------------------------
+*/
+document.getElementById("notification-icon")?.addEventListener("click", () => {
+    lastNotificationCount = 0;
+    window.location.reload();  // 🔥 FULL PAGE REFRESH
+});
+
+// WEBSOCKET HANDLER
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+
+    // Notification count
+    if (data.count !== undefined) {
+        const badge = document.getElementById("notif-count");
+        badge.innerText = data.count;
+
+        if (data.count > lastNotificationCount && lastNotificationCount !== 0) {
+            playNotificationSound();
+            shakeBell();
+        }
+
+        lastNotificationCount = data.count;
+    }
+
+    // Order paid event
+    if (data.type === "order_paid") {
+        refreshLatestOrders();
+        playNotificationSound();
+        shakeBell();
+    }
+};
+
+// Refresh partial via AJAX
+function refreshLatestOrders() {
+    fetch("{% url 'vendor:latest_orders_partial' %}")
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById("latest-orders-tbody");
+            if (tbody) {
+                tbody.innerHTML = data.html;
+
+                tbody.querySelectorAll(".confirm-btn").forEach(btn => {
+                    btn.addEventListener("click", function() {
+                        const id = this.dataset.id;
+                        const status = this.dataset.status;
+
+                        fetch("{% url 'vendor:confirm_product' %}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": "{{ csrf_token }}"
+                            },
+                            body: JSON.stringify({ item_id: id, status: status })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) refreshLatestOrders();
+                        });
+                    });
+                });
+            }
+        });
+}
+
+// Fallback: auto-refresh list every 5s
+setInterval(refreshLatestOrders, 5000);
+</script>
+
+{% endblock content %}

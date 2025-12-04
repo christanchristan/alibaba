@@ -172,6 +172,8 @@ def register_view(request):
     return render(request, 'register.html')
 
 
+
+
 def verify(request, token):
     try:
         profile_obj = Profile.objects.filter(token=token).first()

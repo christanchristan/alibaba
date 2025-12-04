@@ -26,7 +26,6 @@ from paypal.standard.forms import PayPalPaymentsForm
 
 
 # ----------------- PRODUCT / CATEGORY / VENDOR -----------------
-
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.filter(product_status="published").order_by("-id")
     serializer_class = ProductSerializer
@@ -34,16 +33,10 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["get"])
     def featured(self, request):
         products = Product.objects.filter(product_status="published", featured=True).order_by("-id")
-        serializer = ProductSerializer(products, many=True)
+        serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(serializer.data)
 
-    @action(detail=True, methods=["get"])
-    def reviews(self, request, pk=None):
-        product = self.get_object()
-        reviews = ProductReview.objects.filter(product=product).order_by("-date")
-        avg_rating = reviews.aggregate(Avg("rating"))["rating__avg"]
-        serializer = ProductReviewSerializer(reviews, many=True)
-        return Response({"reviews": serializer.data, "average_rating": avg_rating})
+
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):

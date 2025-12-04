@@ -61,8 +61,296 @@
     <link href="css/swiper.css" rel="stylesheet" type="text/css" />
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
+
+    {% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <style>
+
+/* ---------------- Mega Menu Container ---------------- */
+
+
+
+.alibaba-sub-panel {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 220px; /* adjust depending on sidebar width */
+    width: 350px;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    z-index: 999;
+}
+
+.alibaba-sub-panel .main-right-list > li {
+    position: relative;
+    padding: 5px 0;
+}
+
+.sub-menu-right {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%; /* show next to the parent item */
+    width: 200px;
+    background: #f8f8f8; /* light background */
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.main-right-list > li:hover .sub-menu-right {
+    display: block;
+}
+
+.sub-menu-right li {
+    padding: 5px 0;
+}
+
+.sub-menu-right {
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.main-right-list > li:hover .sub-menu-right {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.alibaba-category-panel {
+    width: 260px;
+    background: #fff;
+    border: 1px solid #eee;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    padding: 0;
+    z-index: 999;
+    display: none;
+}
+
+.position-static:hover .alibaba-category-panel {
+    display: block;
+}
+
+/* Left items */
+.alibaba-cat-item {
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f3f3;
+}
+.alibaba-cat-item:hover {
+    background: #f7f7f7;
+}
+
+/* Right panel */
+.alibaba-sub-panel {
+    position: absolute;
+    left: 260px;
+    top: 0;
+    width: 680px;
+    background: #fff;
+    border: 1px solid #eee;
+    display: none;
+    padding: 20px;
+}
+.alibaba-sub-panel.active {
+    display: block;
+}
+
+.alibaba-right-panel {
+    position: absolute;
+    left: 260px;
+    top: 0;
+    background: #fff;
+    width: 600px;
+    min-height: 300px;
+    padding: 20px;
+    display: none;
+}
+
+.alibaba-sub-panel {
+    display: none;   /* Important */
+    padding: 20px;
+}
+
+.alibaba-category-wrapper:hover .alibaba-right-panel {
+    display: block;
+}
+
+/* Grid */
+.alibaba-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+.alibaba-grid img {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+}
+.alibaba-category-panel {
+    width: 260px;
+    max-height: 400px;   /* Set the visible height */
+    overflow-y: auto;    /* Enables vertical scrolling */
+    border-right: 1px solid #eee;
+    padding-right: 10px;
+}
+
+
+/* Banner */
+.alibaba-banner img {
+    width: 100%;
+    border-radius: 6px;
+}
+.shop-btn {
+    background: #ff6a00;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 4px;
+}
+
+.mega-menu {
+    display: flex;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    min-width: 900px;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+
+
+
+
+
+
+
+
+/* Show mega menu on hover */
+li.position-static:hover > .mega-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ---------------- Sub Mega Menu ---------------- */
+.sub-mega-menu {
+    padding: 0 15px;
+}
+
+/* Width control for different sections */
+.sub-mega-menu-width-22 {
+    width: 22%;
+}
+.sub-mega-menu-width-34 {
+    width: 34%;
+}
+
+/* ---------------- Mega Grid for 2xN layout ---------------- */
+.mega-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 10px 15px; /* row and column gap */
+    list-style: none;
+    padding: 10px 0 0 15px; /* add left padding to offset items */
+    margin: 0;
+}
+
+/* Each item in mega grid */
+.mega-grid-item {
+    display: flex;
+    align-items: center;
+}
+
+/* Right side alignment of image + title with offset */
+.mega-grid-item a {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* space between image and title */
+    text-decoration: none;
+    color: #333;
+    padding-left: 10px; /* additional left offset */
+}
+
+/* Image in mega grid item */
+.mega-grid-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Hover effect on each mega grid item */
+.mega-grid-item a:hover {
+    color: #1d8cf8;
+}
+
+/* ---------------- Banner Section ---------------- */
+.menu-banner-wrap {
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-banner-wrap img {
+    width: 100%;
+    border-radius: 6px;
+}
+
+.menu-banner-content {
+    position: absolute;
+    top: 15%;
+    left: 10%;
+    color: #fff;
+}
+
+.menu-banner-btn a {
+    display: inline-block;
+    background: #1d8cf8;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-decoration: none;
+}
+
+.menu-banner-discount {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff3d57;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+/* ---------------- General Hover Styling ---------------- */
+.main-menu ul li:hover > a {
+    color: #1d8cf8;
+}
+
+/* Optional: adjust submenu alignment */
+.mega-menu .sub-mega-menu ul li {
+    padding: 5px 0;
+}
+
+
+    </style>
+</head>
+
     <link rel="shortcut icon" href="img/favicon.ico" />
-  	<title>IVY</title>
+  	<title>lwam</title>
 </head>
 
 
@@ -76,17 +364,16 @@
         </div>
 
         
-        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+  <div class="header-top header-top-ptb-1 d-none d-lg-block">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info">
                             <ul>
-                              <b> <li><a href="{% url 'core:about_us' %}">About Us</a></b></li></b>
-                                <li><b><a href="{% url 'core:dashboard' %}">My Account</a></b></li>
-                                <li><a href="#">phone:- +251935277364</a></li>
-                                <li><a href="#">Email:-abenet@gmail.com</a></li>
-
+                                <li><a href="{% url 'core:about_us' %}">About Us</a></li>
+                                <li><a href="{% url 'core:dashboard' %}">My Account</a></li>
+                                <li><a href="{% url 'core:wishlist' %}">Wishlist</a></li>
+                                <li><a href="{% url 'core:dashboard' %}">Order Tracking</a></li>
                             </ul>
                         </div>
                     </div>
@@ -94,11 +381,9 @@
                         <div class="text-center">
                             <div id="news-flash" class="d-inline-block">
                                 <ul>
-                                     
-                                    <li> ውጭ ሀገር ላላችሁም በፈጣን መላክት እንልካለን</li>
-                                    <li>ልዋም የፋሽን ዲዛይን</li>
-                                    <li>ልዋም የፋሽን ዲዛይን</li>
-                                    <li>100% ልዪ ልዪ የሀገር ባህል ልብሶችን በጥራት እናዘጋጃለን</li>
+                                    <li>100% Secure delivery without contacting the courier</li>
+                                    <li>Supper Value Deals - Save more with coupons</li>
+                                    <li>Trendy 25silver jewelry, save up 35% off today</li>
                                 </ul>
                             </div>
                         </div>
@@ -106,9 +391,20 @@
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
                             <ul>
-                                <li>Need help? Call Us: <strong class="text-brand"> +251935277364</strong></li>
+                                <li>Need help? Call Us: <strong class="text-brand"> + 1800 900</strong></li>
                                 <li>
-                                   
+                                    <a class="language-dropdown-active" href="#">English <i class="fi-rs-angle-small-down"></i></a>
+                                    <ul class="language-dropdown">
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-fr.png' %}" alt="" />Français</a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-dt.png' %}" alt="" />Deutsch</a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/flag-ru.png' %}" alt="" />Pусский</a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li>
                                     <a class="language-dropdown-active" href="#">USD <i class="fi-rs-angle-small-down"></i></a>
@@ -130,13 +426,14 @@
                 </div>
             </div>
         </div>
-
         <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
                         <a href="/"><img width="50"  height="50" src="/static/assets/imgs/banner/banner-9.jpg" alt="newsletter"></a>
                     </div>
+                    
+                               
                     <div class="header-right">
                         <div class="search-style-2">
                             <form action="{% url 'core:search' %}" method="GET">
@@ -172,7 +469,7 @@
                                     <a href="{% url 'core:wishlist' %}"><span class="lable">Wishlist</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="{% url 'core:cart' %}">
+                                    <a class="mini-cart-icon" href="{% url 'core:cart' %}"> 
                                         <img alt="E-commerce" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
                                         <span class="pro-count blue cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                     </a>
@@ -185,7 +482,6 @@
                                                 <a href="{% url 'core:cart' %}" class="outline">View cart</a>
                                                   <a href="https://lewamfashion.com/user/sign-up/?next=/save_checkout_info/">Buy it Now</a>
                                            
-                                                  
                                             </div>
                                         </div>
                                     </div>
@@ -217,113 +513,336 @@
                 </div>
             </div>
         </div>
-        <div class="header-bottom header-bottom-bg-color sticky-bar">
-            <div class="container">
-                <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="{% url 'core:index' %}"><img src="https://clipground.com/images/ecommerce-logo-png-11.png" alt="logo" /></a>
-                    </div>
-                    <div class="header-nav d-none d-lg-flex">
-                        <div class="main-categori-wrap d-none d-lg-block">
-                            <a class="categories-button-active" href="#">
-                                <span class="fi-rs-apps"></span> <span class="et">wam </span> Fashion Desighn
-                                <i class="fi-rs-angle-down"></i>
-                            </a>
-                            <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
-                                <div class="d-flex categori-dropdown-inner">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+ <div class="header-bottom header-bottom-bg-color sticky-bar">
+    <div class="container">
+        <div class="header-wrap header-space-between position-relative">
+
+            <!-- Logo -->
+            <div class="logo logo-width-1 d-block d-lg-none">
+                <a href="{% url 'core:index' %}">
+                    <img src="https://clipground.com/images/ecommerce-logo-png-11.png" alt="logo" />
+                </a>
+            </div>
+
+            <!-- MAIN MENU -->
+            <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
+                <nav>
+                    <ul>
+
+
+<li class="position-static">
+    <a href="#">Categories <i class="fi-rs-angle-down"></i></a>
+
+    <div class="alibaba-category-wrapper">
+
+        <!-- LEFT SIDEBAR -->
+        <div class="alibaba-category-panel">
+
+            <!-- Category 1 -->
+            <div class="alibaba-cat-item active" data-target="cat1">
+                <span>Main Categories</span>
+                <i class="fi-rs-angle-right"></i>
+            </div>
+
+            <!-- Category 2 -->
+            <div class="alibaba-cat-item" data-target="cat2">
+                <span>Breakfast & Dairy</span>
+                <i class="fi-rs-angle-right"></i>
+            </div>
+
+            <!-- Category 3 -->
+            <div class="alibaba-cat-item" data-target="cat3">
+                <span>Hot Deals</span>
+                <i class="fi-rs-angle-right"></i>
+            </div>
+
+        </div>
+
+        <!-- RIGHT PANELS -->
+        <div class="alibaba-right-panel">
+
+            <!-- PANEL 1: Main Categories -->
+            <div id="cat1" class="alibaba-sub-panel" style="display: block;">
+                <ul class="main-right-list">
+                    <li>
+                        <a href="#">Meat & Poultry</a>
+                        <ul class="sub-menu-right">
+                            <li><a href="#">Chicken</a></li>
+                            <li><a href="#">Beef</a></li>
+                            <li><a href="#">Lamb</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Fresh Vegetables</a>
+                        <ul class="sub-menu-right">
+                            <li><a href="#">Carrots</a></li>
+                            <li><a href="#">Spinach</a></li>
+                            <li><a href="#">Broccoli</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Herbs & Seasonings</a></li>
+                    <li><a href="#">Cuts & Sprouts</a></li>
+                    <li><a href="#">Exotic Fruits & Veggies</a></li>
+                    <li><a href="#">Packaged Produce</a></li>
+                </ul>
+            </div>
+
+            <!-- PANEL 2: Breakfast & Dairy -->
+            <div id="cat2" class="alibaba-sub-panel" style="display: none;">
+                <ul class="alibaba-grid">
+                    {% for c in categories %}
+                    <li>
+                        <a href="{% url 'core:category-product-list' c.cid %}">
+                            <img src="{{ c.image.url }}" alt="{{ c.title }}">
+                            <span>{{ c.title }}</span>
+                        </a>
+                        <ul class="sub-menu-right">
+                            <li><a href="#">Subitem 1</a></li>
+                            <li><a href="#">Subitem 2</a></li>
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- PANEL 3: Hot Deals -->
+            <div id="cat3" class="alibaba-sub-panel alibaba-banner" style="display: none;">
+                <img src="{% static 'assets/imgs/banner/banner-menu.png' %}" alt="Hot Deals">
+                <h3>Don't Miss<br>Trending</h3>
+                <p class="discount">Save up to 50%</p>
+                <a href="#" class="shop-btn">Shop Now</a>
+            </div>
+
+        </div>
+    </div>
+</li>
+
+<!-- JS to handle hover and default -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const items = document.querySelectorAll('.alibaba-cat-item');
+    const panels = document.querySelectorAll('.alibaba-sub-panel');
+
+    items.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            // Remove active class from all
+            items.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+
+            // Hide all panels
+            panels.forEach(p => p.style.display = 'none');
+
+            // Show target panel
+            const target = this.dataset.target;
+            const panel = document.getElementById(target);
+            if(panel) panel.style.display = 'block';
+        });
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li><a class="active" href="{% url 'core:index' %}"></a></li>
+
+
+
+
+
+
+
+                       <li class="position-static">
+                        
+   
+ <a href="#">Categories <i class="fi-rs-angle-down"></i></a>
+    <!-- FULL WRAPPER (NEEDED!!) -->
+    <div class="alibaba-category-wrapper">
+        
+
+        <!-- LEFT SIDEBAR -->
+        <div class="alibaba-category-panel">
+
+            <!-- Category 1 -->
+           <div class="alibaba-cat-item" data-target="cat10" onclick="location.href='#';">
+  <span>Main Categories</span>
+  <i class="fi-rs-angle-right"></i>
+</div
+            <!-- Category 2 -->
+            <div class="alibaba-cat-item" data-target="cat2">
+                <span>Breakfast & Dairy</span>
+                <i class="fi-rs-angle-right"></i>
+            </div>
+
+            <!-- Category 3 -->
+            <div class="alibaba-cat-item" data-target="cat3">
+                <span>Hot Deals</span>
+                <i class="fi-rs-angle-right"></i>
+            </div>
+
+        </div>
+
+        <!-- RIGHT PANELS -->
+        <div class="alibaba-right-panel">
+
+            <!-- PANEL 1 -->
+            <div id="cat10" class="alibaba-sub-panel">
+                <ul>
+                    <li><a href="#">Meat & Poultry</a></li>
+                    <li><a href="#">Fresh Vegetables</a></li>
+                    <li><a href="#">Herbs & Seasonings</a></li>
+                    <li><a href="#">Cuts & Sprouts</a></li>
+                    <li><a href="#">Exotic Fruits & Veggies</a></li>
+                    <li><a href="#">Packaged Produce</a></li>
+                </ul>
+            </div>
+
+            <!-- PANEL 2 -->
+            <div id="cat2" class="alibaba-sub-panel">
+                <ul class="alibaba-grid">
+                    {% for c in categories %}
+                    <li>
+                        <a href="{% url 'core:category-product-list' c.cid %}">
+                            <img src="{{ c.image.url }}" alt="{{ c.title }}">
+                            <span>{{ c.title }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- PANEL 3 -->
+            <div id="cat3" class="alibaba-sub-panel alibaba-banner">
+                <img src="{% static 'assets/imgs/banner/banner-menu.png' %}" alt="Hot Deals">
+                <h3>Don't Miss<br>Trending</h3>
+                <p class="discount">Save up to 50%</p>
+                <a href="#" class="shop-btn">Shop Now</a>
+            </div>
+
+        </div>
+
+    </div>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                          <li class="position-static">
+                            <a href="#">Categories <i class="fi-rs-angle-down"></i></a>
+
+                            <div class="alibaba-category-panel">
+
+                                <!-- Category 1 -->
+                              <div class="alibaba-cat-item" data-target="cat10" onclick="location.href='#';">
+  <span><a href="#">Maincatagories <i ></i></a></span>
+  <i class="fi-rs-angle-right"></i>
+                              </div>
+
+                                <div id="cat11" class="alibaba-sub-panel">
                                     <ul>
-                                        {% for c in categories %}
-
-                                        <li>
-                                            <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{ c.image.url }}" alt="" />{{c.title}}</a>
-                                        </li>
-                                        {% endfor %}
-
+                                        <li><a href="#">Meat & Poultry</a></li>
+                                        <li><a href="#">Fresh Vegetables</a></li>
+                                        <li><a href="#">Herbs & Seasonings</a></li>
+                                        <li><a href="#">Cuts & Sprouts</a></li>
+                                        <li><a href="#">Exotic Fruits & Veggies</a></li>
+                                        <li><a href="#">Packaged Produce</a></li>
                                     </ul>
-
                                 </div>
 
-                                <div class="more_categories"><span class="icon"></span> <span class="heading-sm-1">Show more...</span></div>
+                                <!-- Category 2 (Dynamic Django Loop) -->
+                                <div class="alibaba-cat-item" data-target="cat2">
+                                    <span>Breakfast & Dairy</span>
+                                    <i class="fi-rs-angle-right"></i>
+                                </div>
+
+                                <div id="cat2" class="alibaba-sub-panel">
+                                    <ul class="alibaba-grid">
+                                        {% for c in categories %}
+                                        <li>
+                                            <a href="{% url 'core:category-product-list' c.cid %}">
+                                                <img src="{{ c.image.url }}" alt="{{ c.title }}">
+                                                <span>{{ c.title }}</span>
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                                <!-- Banner -->
+                                <div class="alibaba-cat-item" data-target="cat3">
+                                    <span>Hot Deals</span>
+                                    <i class="fi-rs-angle-right"></i>
+                                </div>
+
+                                <div id="cat3" class="alibaba-sub-panel alibaba-banner">
+                                    <img src="{% static 'assets/imgs/banner/banner-menu.png' %}" alt="Hot Deals">
+                                    <h3>Don't Miss<br>Trending</h3>
+                                    <p class="discount">Save up to 50%</p>
+                                    <a href="#" class="shop-btn">Shop Now</a>
+                                    
+                                </div>
+
                             </div>
-                        </div>
-                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
-                            <nav>
-                                <ul>
-                                    <li>
-                                        <a href="{% url 'core:product-list'  %}"></a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'core:product-list'  %}"></a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'core:product-list'  %}"></a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'core:product-list'  %}"></a>
-                                    </li>
-                              
-                                    <li>
-                                        <a class="active" href="{% url 'core:index' %}">Dashboard </a>
-
-                                    </li>
-
-                                  
-                                    <li>
-                                        <a href="{% url 'core:contact' %}">Contact</a>
-                                    </li>
-                                   
-                                    
-                                    <li>
-                                       <li><a href="{% url 'core:purchase_guide' %}">Purchase Guide</a></li>
-
-                                    </li>
- <li>
-                                    
-                                               <li><a href="{% url 'core:vendor-list' %}">vendors</a></li>
-</li>
-
- <li>
-                                    
-                                               <li><a href="{% url 'core:product-list' %}">Shop</a></li>
-</li>
-
-
-
-                                    <li>
-                                        <a href="{% url 'core:product-list'  %}"></a>
-                                    </li>
-
-                                    
-                                    <li>
-                                        <a href="#">Pages <i class="fi-rs-angle-down"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="{% url 'core:about_us' %}">About Us</a></li>
-                                            <li><a href="{% url 'core:contact' %}">Contact</a></li>
-                                            <li><a href="{% url 'core:dashboard' %}">My Dashboard</a></li>
-                                            <li><a href="{% url 'core:purchase_guide' %}">Purchase Guide</a></li>
-                                            <li><a href="{% url 'core:privacy_policy' %}">Privacy Policy</a></li>
-                                            <li><a href="{% url 'core:terms_of_service' %}">Terms of Service</a></li>
-                                            
-                                             
-                                        </ul>
-                                    </li>
-
-                                 
-                                     <li>
-                                        <a href="#">Category <i class="fi-rs-angle-down"></i></a>
-                                        <ul class="sub-menu">
-                                            {% for c in categories %}
-                                            <li><a href="{% url 'core:category-product-list' c.cid %}">{{c.title}}</a></li>
-                                            {% endfor %}
-                                            <hr>
-                                            <li><a href="{% url 'core:category-list' %}">All Categories</a></li>
-
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
+                        </li> 
 
 
 
@@ -331,6 +850,66 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li><a class="active" href="{% url 'core:index' %}"></a></li>
+<li><a class="active" href="{% url 'core:index' %}"></a></li>
+<li><a class="active" href="{% url 'core:index' %}"></a></li>
+                        <!-- REGULAR LINKS (KEPT EXACTLY AS YOU HAD THEM) -->
+                        <li><a class="active" href="{% url 'core:index' %}">Dashboard</a></li>
+                        <li><a href="{% url 'core:contact' %}">Contact</a></li>
+                        <li><a href="{% url 'core:purchase_guide' %}">Purchase Guide</a></li>
+                        <li><a href="{% url 'core:product-list' %}">Shop</a></li>
+
+                        <!-- Pages Dropdown -->
+                        <li>
+                            <a href="#">Pages <i class="fi-rs-angle-down"></i></a>
+                            <ul class="sub-menu">
+                                <li><a href="{% url 'core:about_us' %}">About Us</a></li>
+                                <li><a href="{% url 'core:contact' %}">Contact</a></li>
+                                <li><a href="{% url 'core:dashboard' %}">My Dashboard</a></li>
+                                <li><a href="{% url 'core:purchase_guide' %}">Purchase Guide</a></li>
+                                <li><a href="{% url 'core:privacy_policy' %}">Privacy Policy</a></li>
+                                <li><a href="{% url 'core:terms_of_service' %}">Terms of Service</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Category Dropdown -->
+                        <li>
+                            <a href="#">Category <i class="fi-rs-angle-down"></i></a>
+                            <ul class="sub-menu">
+                                {% for c in categories %}
+                                <li><a href="{% url 'core:category-product-list' c.cid %}">{{ c.title }}</a></li>
+                                {% endfor %}
+                                <hr>
+                                <li><a href="{% url 'core:category-list' %}">All Categories</a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+ 
 
 
 
@@ -339,7 +918,7 @@
 
 
 <!-- start mobie header-->           
-                    <div class="header-action-icon-2 d-block d-lg-none">
+                    <div class="header-action-icon-4 d-block d-lg-none">
                         <div class="burger-icon burger-icon-white">
                             <span class="burger-icon-top"></span>
                             <span class="burger-icon-mid"></span>
@@ -347,17 +926,18 @@
                         </div>
                     </div>
                     <div class="header-action-right d-block d-lg-none">
-                        <div class="header-action-2">
-                            <div class="header-action-icon-2">
+                        <div class="header-action-4">
+                            <div class="header-action-icon-4">
                                 <a href="{% url 'core:wishlist' %}">
                                    <img src="{% static 'assets/imgs/banner/icon-heart.svg' %}" alt="logos" />      {% if request.user.is_authenticated %}
                                     <span class="pro-count blue">{{ wishlist.count }}</span>
                                     {% else %}
                                     <span class="pro-count blue">0</span>
                                     {% endif %}
+                              
                                 </a>
                             </div>
-                            <div class="header-action-icon-2">
+                            <div class="header-action-icon-4">
                                 <a class="mini-cart-icon" href="{% url 'core:cart' %}">
   <img src="{% static 'assets/imgs/banner/icon-cart.svg' %}" alt="logos" /> 
                                     <span class="pro-count white cart-items-count">{{ request.session.cart_data_obj|length }}</span>
@@ -437,6 +1017,8 @@
                     
                     <nav>
                         <ul class="mobile-menu font-heading">
+
+                            
                             <li class="menu-item-has-children">
                                 <a href="https://lewamfashion.com/">Home</a>
                                 
@@ -737,7 +1319,40 @@
         </div>
     </div> -->
     <!-- Vendor JS-->
-    <script data-cfasync="false" src="{% static '/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script>
+     
+     
+     <script >
+   document.querySelectorAll(".alibaba-cat-item").forEach(item => {
+    item.addEventListener("mouseenter", function() {
+        const target = this.getAttribute("data-target");
+
+        // Hide all right panels
+        document.querySelectorAll(".alibaba-sub-panel").forEach(p => {
+            p.style.display = "none";
+        });
+
+        // Show the selected panel
+        const panel = document.getElementById(target);
+        if(panel){
+            panel.style.display = "block";
+        }
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+    <script 
+    
+    data-cfasync="false" src="{% static '/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script>
     <script src="{% static 'assets/js/vendor/modernizr-3.6.0.min.js' %}"></script>
     <script src="{% static 'assets/js/vendor/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'assets/js/vendor/jquery-migrate-3.3.0.min.js' %}"></script>

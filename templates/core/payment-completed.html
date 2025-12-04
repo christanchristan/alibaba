@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Nest - Multipurpose eCommerce HTML Template</title>
+    <title>Gullit Commercial -  eCommerce Campany</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,8 +33,8 @@
                                         <div class="logo d-flex align-items-center">
                                             <a href="index.html" class="mr-20"><img src="{% static 'assets/imgs/theme/favicon.svg' %}" alt="logo" /></a>
                                             <div class="text">
-                                                <strong class="text-brand">NestMart Inc</strong> <br />
-                                                205 North, Suite 810, Chicago, USA
+                                                <strong class="text-brand">Gullit Commercial</strong> <br />
+                                            Dembal Center,Addis Ababa, Ethiopia
                                             </div>
                                         </div>
                                     </div>
@@ -44,7 +44,7 @@
                                 </div>
                             </div>
                             <div class="invoice-banner">
-                                <img src="{% static 'assets/imgs/invoice/banner.png' %}" alt="">
+                                <img src="{% static 'assets/imgs/invoice/banner1.png' %}" alt="">
                             </div>
                             <div class="invoice-center">
                                 <div class="table-responsive">
@@ -64,7 +64,7 @@
                                                     <div class="item-desc-1">
                                                         <span>{{item.title}}</span>
                                                     </div>
-                                                </td>
+                                                </td> 
                                                 <td class="text-center">${{item.price}}</td>
                                                 <td class="text-center">{{ item.qty }}</td>
                                                 <td class="text-right">${% widthratio item.price 1 item.qty %}.00</td>
@@ -72,8 +72,8 @@
                                             {% endfor %}
 
                                             <tr>
-                                                <td colspan="3" class="text-end f-w-600">SubTotal</td>
-                                                <td class="text-right">${{cart_total_amount}}</td>
+                                                <td colspan="3" class="text-end f-w-600">SubTotal(product_only)</td>
+                                                <td class="text-right">${{order.total_price}}</td>
                                             </tr>
                                             <!-- <tr>
                                                 <td colspan="3" class="text-end f-w-600">Tax</td>
@@ -81,7 +81,7 @@
                                             </tr> -->
                                             <tr>
                                                 <td colspan="3" class="text-end f-w-600">Grand Total</td>
-                                                <td class="text-right f-w-600">${{cart_total_amount}}</td>
+                                                <td class="text-right f-w-600">${{order.price}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="row text-center">
                                     <div class="hr mt-30 mb-30"></div>
-                                    <p class="mb-0 text-muted"><strong>Hey {{ request.user|title }}, </strong>Thanks for our shopping at NestMart</p>
+                                    <p class="mb-0 text-muted"><strong>Hey {{ request.user|title }}, </strong>Thanks for our shopping at EthioCommercial</p>
                                 </div>
                             </div>
                         </div>
@@ -111,6 +111,13 @@
                             <a href="javascript:window.print()" class="btn btn-lg btn-custom btn-print hover-up"> <img src="{% static 'assets/imgs/theme/icons/icon-print.svg' %}" alt="" /> Print </a>
                             <a id="invoice_download_btn" class="btn btn-lg btn-custom btn-download hover-up"> <img src="{% static 'assets/imgs/theme/icons/icon-download.svg' %}" alt="" /> Download </a>
                         </div>
+                           <div class="invoice-btn-section clearfix d-print-none">
+                            <a href="javascript:window.print()" class="btn btn-lg btn-custom btn-print hover-up"> <img src="{% static 'assets/imgs/theme/icons/icon-print.svg' %}" alt="" /> Print </a>
+                            <a id="invoice_download_btn" class="btn btn-lg btn-custom btn-download hover-up"> <img src="{% static 'assets/imgs/theme/icons/icon-download.svg' %}" alt="" /> Download </a>
+                         <a href="http://127.0.0.1:8000/dashboard/" class="btn btn-lg btn-custom btn-print hover-up">
+    <img src="{% static 'assets/imgs/theme/icons/icon-print.svg' %}" alt="" /> 
+    Follow your shipping and billing addresses
+</a>   </div>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@ from django.urls import path
 
 
 from .views import *
-from candyApp import candy
+
 
 app_name = "home"
 urlpatterns = [

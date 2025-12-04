@@ -288,90 +288,83 @@ def update_cart(request):
     context = render_to_string("core/async/cart-list.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount})
     return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
 
-
+@login_required
 def save_checkout_info(request):
-    cart_total_amount = 0
-    total_amount = 0
-    if request.method == "POST":
-        full_name = request.POST.get("full_name")
-        email = request.POST.get("email")
-        mobile = request.POST.get("mobile")
-        address = request.POST.get("address")
-        city = request.POST.get("city")
-        state = request.POST.get("state")
-        country = request.POST.get("country")
+    if request.method != "POST":
+        messages.error(request, "Invalid request method.")
+        return redirect("core:cart")
 
-        print(full_name)
-        print(email)
-        print(mobile)
-        print(address)
-        print(city)
-        print(state)
-        print(country)
+    # 1️⃣ Get form data from POST
+    full_name = request.POST.get("full_name")
+    email = request.POST.get("email")
+    mobile = request.POST.get("phone")
+    address = request.POST.get("address")
+    city = request.POST.get("city")
+    state = request.POST.get("state")
+    country = request.POST.get("country")
 
-        request.session['full_name'] = full_name
-        request.session['email'] = email
-        request.session['mobile'] = mobile
-        request.session['address'] = address
-        request.session['city'] = city
-        request.session['state'] = state
-        request.session['country'] = country
+    # 2️⃣ Save temporarily in session (optional)
+    request.session.update({
+        'full_name': full_name,
+        'email': email,
+        'mobile': mobile,
+        'address': address,
+        'city': city,
+        'state': state,
+        'country': country,
+    })
 
+    # 3️⃣ Ensure cart exists
+    cart = request.session.get("cart_data_obj")
+    if not cart:
+        messages.error(request, "Your cart is empty!")
+        return redirect("core:index")
 
-        if 'cart_data_obj' in request.session:
+    # 4️⃣ Calculate total
+    total_amount = sum(int(item['qty']) * float(item['price']) for item in cart.values())
 
-            # Getting total amount for Paypal Amount
-            for p_id, item in request.session['cart_data_obj'].items():
-                total_amount += int(item['qty']) * float(item['price'])
+    # 5️⃣ Create CartOrder
+    order = CartOrder.objects.create(
+        user=request.user,
+        price=total_amount,
+        full_name=full_name,
+        email=email,
+        phone=mobile,
+        address=address,
+        city=city,
+        state=state,
+        country=country,
+    )
 
+    # Save order OID in session
+    request.session['order_oid'] = order.oid
 
-            full_name = request.session['full_name']
-            email = request.session['email']
-            phone = request.session['mobile']
-            address = request.session['address']
-            city = request.session['city']
-            state = request.session['state']
-            country = request.session['country']
+    # 6️⃣ Create CartOrderProducts for each item
+    for item in cart.values():
+        product_id = item.get("pid")
+        product_obj = Product.objects.filter(pid=product_id).first()
+        vendor_obj = product_obj.vendor if product_obj else None
 
-            # Create ORder Object
-            order = CartOrder.objects.create(
-                user=request.user,
-                price=total_amount,
-                full_name=full_name,
-                email=email,
-                phone=phone,
-                address=address,
-                city=city,
-                state=state,
-                country=country,
-            )
+        CartOrderProducts.objects.create(
+            order=order,
+            vendor=vendor_obj,
+            invoice_no=f"INVOICE_NO-{order.id}",
+            product_status="Pending",
+            item=item['title'],
+            image=item['image'],
+            qty=int(item['qty']),
+            price=float(item['price']),
+            total=int(item['qty']) * float(item['price']),
+            product=product_obj  # ← Correct FK link to Product
+        )
 
-            del request.session['full_name']
-            del request.session['email']
-            del request.session['mobile']
-            del request.session['address']
-            del request.session['city']
-            del request.session['state']
-            del request.session['country']
+    # 7️⃣ Clear temporary session checkout info
+    for key in ['full_name', 'email', 'mobile', 'address', 'city', 'state', 'country']:
+        request.session.pop(key, None)
 
-            # Getting total amount for The Cart
-            for p_id, item in request.session['cart_data_obj'].items():
-                cart_total_amount += int(item['qty']) * float(item['price'])
-
-                cart_order_products = CartOrderProducts.objects.create(
-                    order=order,
-                    invoice_no="INVOICE_NO-" + str(order.id), # INVOICE_NO-5,
-                    item=item['title'],
-                    image=item['image'],
-                    qty=item['qty'],
-                    price=item['price'],
-                    total=float(item['qty']) * float(item['price'])
-                )
-
-
-
-        return redirect("core:checkout", order.oid)
+    # 8️⃣ Redirect to checkout page with the new order
     return redirect("core:checkout", order.oid)
+
 
 
 

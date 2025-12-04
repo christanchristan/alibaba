@@ -1,0 +1,134 @@
+{% extends 'vendor/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+
+{% block content %}
+<section class="content-main">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-9">
+        <div class="content-header">
+          <h2 class="content-title">Add New Product</h2>
+          <div>
+            <button type="submit" name="status_action" value="draft" class="btn btn-light rounded font-sm mr-5 text-body hover-up">
+              Save to Draft
+            </button>
+            <button type="submit" name="status_action" value="published" class="btn btn-md rounded font-sm hover-up">
+              Publish
+            </button>
+          </div>
+        </div>
+        <div class="card mb-4">
+          <div class="card-header"><h4>Basic</h4></div>
+          <div class="card-body">
+            {% if form.errors %}
+              <div class="alert alert-danger">
+                <strong>{{ form.errors }}</strong>
+              </div>
+            {% endif %}
+
+            <div class="mb-4">
+              <label class="form-label">Product title</label>
+              {{ form.title }}
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Full description</label>
+              {{ form.description }}
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4 mb-4">
+                <label class="form-label">Selling price</label>
+                {{ form.price }}
+              </div>
+              <div class="col-lg-4 mb-4">
+                <label class="form-label">Old price</label>
+                {{ form.old_price }}
+              </div>
+              <div class="col-lg-4 mb-4">
+                <label class="form-label">Currency</label>
+                <select class="form-select">
+                  <option>USD</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Type</label>
+              {{ form.type }}
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Stock</label>
+              {{ form.stock_count }}
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Life of Product</label>
+              {{ form.life }}
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Manufactured Date</label>
+              {{ form.mfd }}
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Tags</label>
+              {{ form.tags }}
+              <small class="text-muted">Separate tags using comma</small>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Digital Product</label><br>
+              {{ form.digital }}
+              <small class="text-muted">Check if this is a digital product</small>
+            </div>
+
+            <!-- New: Status field -->
+            <div class="mb-4">
+              <label class="form-label">Status</label>
+              {{ form.product_status }}
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <div class="card mb-4">
+          <div class="card-header"><h4>Media</h4></div>
+          <div class="card-body">
+            <div class="input-upload">
+              {% if form.instance.image %}
+                <img src="{{ form.instance.image.url }}" alt="" style="max-width: 100%;" />
+              {% endif %}
+              {{ form.image }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header"><h4>Others</h4></div>
+          <div class="card-body">
+            <div class="row gx-2">
+              <div class="col-sm-6 mb-3">
+                <label class="form-label">Category</label>
+                {{ form.category }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn mt-3 btn-md rounded font-sm hover-up" type="submit">Save Product</button>
+      </div>
+    </div>
+  </form>
+</section>
+{% endblock content %}

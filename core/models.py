@@ -6,6 +6,7 @@ from taggit.managers import TaggableManager
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils import timezone
 
+
 STATUS_CHOICE = (
     ("processing", "Not Paid"),
     ("shipped", "Shipped"),
@@ -18,6 +19,11 @@ STATUS = (
     ("rejected", "Rejected"),
     ("in_review", "In Review"),
     ("published", "Published"),
+)
+VENDOR_CONFIRMATION_STATUS = (
+    ("pending", "Pending"),
+    ("confirmed", "Confirmed"),
+    ("not_available", "Not Available"),
 )
 
 RATING = (
@@ -87,25 +93,36 @@ class Vendor(models.Model):
         return self.title
 
 
+from decimal import Decimal  # ✅ import at top
+from django.db import models
+
+from taggit.managers import TaggableManager
+from django.utils.safestring import mark_safe
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 # ---------------------------- Product ----------------------------
+
 class Product(models.Model):
     pid = ShortUUIDField(unique=True, length=10, max_length=20, alphabet="abcdefgh12345")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="category")
-    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, related_name="product")
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, related_name="category")
+    vendor = models.ForeignKey('Vendor', on_delete=models.SET_NULL, null=True, related_name="product")
 
     title = models.CharField(max_length=100, default="Fresh Pear")
-    image = models.ImageField(upload_to=user_directory_path, default="product.jpg")
+    image = models.ImageField(upload_to='products/', default="product.jpg")
     description = CKEditor5Field(config_name='extends', null=True, blank=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2, default="0.00")
-    old_price = models.DecimalField(max_digits=12, decimal_places=2, default="2.99")
+    old_price = models.DecimalField(max_digits=12, decimal_places=2, default="0.00")  # vendor base price
+    price = models.DecimalField(max_digits=12, decimal_places=2, default="0.00")  # final selling price
     specifications = CKEditor5Field(config_name='extends', null=True, blank=True)
     type = models.CharField(max_length=100, default="Organic", null=True, blank=True)
     stock_count = models.CharField(max_length=100, default="10", null=True, blank=True)
     life = models.CharField(max_length=100, default="100 Days", null=True, blank=True)
     mfd = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     tags = TaggableManager(blank=True)
-    product_status = models.CharField(choices=STATUS, max_length=10, default="published")
+    product_status = models.CharField(choices=[('published','Published'),('draft','Draft')], max_length=10, default="published")
     status = models.BooleanField(default=True)
     in_stock = models.BooleanField(default=True)
     featured = models.BooleanField(default=True)
@@ -117,15 +134,24 @@ class Product(models.Model):
     class Meta:
         verbose_name_plural = "Products"
 
+    def __str__(self):
+        return self.user.email if self.user else self.title
+
     def product_image(self):
         return mark_safe('<img src="%s" width="50" height="50" />' % (self.image.url))
 
-    def __str__(self):
-        return self.title
-
-    def get_precentage(self):
-        return (self.price / self.old_price) * 100
-
+    # ----------------------------
+    # Save method
+    # ----------------------------
+    def save(self, *args, **kwargs):
+        """
+        Increase both old_price and price by 10% automatically
+        """
+        if self.old_price and self.old_price > 0:
+            self.old_price = round(self.old_price * Decimal('1.10'), 2)
+        if self.price and self.price > 0:
+            self.price = round(self.price * Decimal('1.10'), 2)
+        super().save(*args, **kwargs)
 
 class ProductImages(models.Model):
     images = models.ImageField(upload_to="product-images", default="product.jpg")
@@ -134,7 +160,6 @@ class ProductImages(models.Model):
 
     class Meta:
         verbose_name_plural = "Product Images"
-
 
 # ---------------------------- Cart / Orders ----------------------------
 class CartOrder(models.Model):
@@ -147,6 +172,7 @@ class CartOrder(models.Model):
     state = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=2, default="0.00")
+    total_price = models.DecimalField(max_digits=12, decimal_places=2, default="0.00")  
     saved = models.DecimalField(max_digits=12, decimal_places=2, default="0.00")
     coupons = models.ManyToManyField("core.Coupon", blank=True)
     shipping_method = models.CharField(max_length=100, null=True, blank=True)
@@ -155,10 +181,18 @@ class CartOrder(models.Model):
     paid_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     product_status = models.CharField(choices=STATUS_CHOICE, max_length=30, default="Not Paid")
-    sku = ShortUUIDField(null=True, blank=True, length=5,prefix="SKU", max_length=20, alphabet="1234567890")
+    sku = ShortUUIDField(null=True, blank=True, length=5, prefix="SKU", max_length=20, alphabet="1234567890")
     oid = ShortUUIDField(null=True, blank=True, length=8, max_length=20, alphabet="1234567890")
     stripe_payment_intent = models.CharField(max_length=1000, null=True, blank=True)
     date = models.DateTimeField(default=timezone.now, null=True, blank=True)
+    shipping_cost = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    shipping_estimate = models.CharField(max_length=100, null=True, blank=True)
+    # ✅ NEW FIELD: Vendor confirmation
+    vendor_confirmation = models.CharField(
+        choices=VENDOR_CONFIRMATION_STATUS,
+        max_length=30,
+        default="pending")
+
 
     class Meta:
         verbose_name_plural = "Cart Order"
@@ -172,8 +206,17 @@ class CartOrderProducts(models.Model):
     item = models.CharField(max_length=200)
     image = models.CharField(max_length=200)
     qty = models.IntegerField(default=0)
+    customer_center = models.CharField(max_length=100, null=True, blank=True) 
     price = models.DecimalField(max_digits=12, decimal_places=2, default="0.00")
     total = models.DecimalField(max_digits=12, decimal_places=2, default="0.00")
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True, blank=True)
+    vendor_center = models.CharField(max_length=100, null=True, blank=True)
+    vendor_confirmation = models.BooleanField(
+        null=True,
+        blank=True,
+        help_text="Has the vendor confirmed availability of the material?"
+    )
+
 
     class Meta:
         verbose_name_plural = "Cart Order Items"

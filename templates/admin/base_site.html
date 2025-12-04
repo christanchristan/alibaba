@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    Vendor Admin Panel
+</h1>
+{% endblock %}
+
+{% block nav-global %}
+<div id="vendor-notification-area" style="float:right; margin-right:20px;">
+    <span id="notification-icon" style="font-size:22px; cursor:pointer;">
+        🔔 <span id="notif-count" style="color:red;font-weight:bold;">0</span>
+    </span>
+    <div id="notif-dropdown"
+         style="display:none; position:absolute; background:#fff; border:1px solid #ccc;
+                width:250px; right:20px; padding:10px;">
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{{ block.super }}
+<script>
+    // Pass static sound path to JS file
+    window.vendorNotificationSound = "{% static 'sound/notifications.mp3' %}";
+</script>
+
+<script src="{% static 'js/vendor_notifications.js' %}"></script>
+
+{% endblock %}
